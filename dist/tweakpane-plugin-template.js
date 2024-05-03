@@ -6750,7 +6750,6 @@ createPlugin({
 const className = ClassName('step');
 // Custom view class should implement `View` interface
 class StepperPluginView {
-    //private textView_: PointNdTextController<InputEvent>['view'];
     constructor(doc, config) {
         // Create a root element for the plugin
         this.element = doc.createElement('div');
@@ -6782,7 +6781,6 @@ class StepperPluginView {
     }
     refresh_() {
         this.value_.rawValue;
-        //this.numInput.textContent = rawValue;
     }
     onValueChange_() {
         this.refresh_();
@@ -6791,7 +6789,6 @@ class StepperPluginView {
 
 // Custom controller class should implement `Controller` interface
 class StepperController {
-    //private readonly tc_: PointNdTextController<Stepper>;
     constructor(doc, config) {
         // Receive the bound value from the plugin
         this.value = config.value;
@@ -6806,13 +6803,6 @@ class StepperController {
             value: this.value,
             viewProps: this.viewProps,
         });
-        // this.tc_ = new PointNdTextController(doc, {
-        // 	assembly: StepperAssembly,
-        // 	parser: parseNumber,
-        // 	value: this.value,
-        // 	viewProps: this.viewProps,
-        // });
-        // this.view.textElement.appendChild(this.tc_.view.element);
         // Handle user interaction
         // this.view.buttonElement.addEventListener('click', () => {
         // 	// Update a model
@@ -6829,7 +6819,7 @@ class Stepper {
         if (typeof obj !== 'object' || obj === null) {
             return false;
         }
-        const val = obj.min;
+        const val = obj.val;
         if (typeof val !== 'number') {
             return false;
         }
@@ -6894,11 +6884,7 @@ function createConstraint(params) {
 // - P is the type of the parsed parameters
 //
 const StepperInputPlugin = createPlugin({
-    id: 'stepperInput',
-    // type: The plugin type.
-    // - 'input': Input binding
-    // - 'monitor': Monitor binding
-    // - 'blade': Blade without binding
+    id: 'input-stepper',
     type: 'input',
     accept(exValue, params) {
         if (!Stepper.isObject(exValue)) {
@@ -6928,35 +6914,6 @@ const StepperInputPlugin = createPlugin({
         reader: (_args) => stepperFromUnknown,
         constraint: (args) => createConstraint(args.params),
         writer: (_args) => writeStepper,
-        // reader(_args) {
-        // 	// return (exValue: unknown): number => {
-        // 	// 	// Convert an external unknown value into the internal value
-        // 	// 	return typeof exValue === 'number' ? exValue : 0;
-        // 	// };
-        // 	return Stepper.isObject(_args) ? new Stepper(_args.val) : new Stepper(0);
-        // },
-        // constraint(args) {
-        // 	// Create a value constraint from the user input
-        // 	const constraints = [];
-        // 	// You can reuse existing functions of the default plugins
-        // 	const cr = createRangeConstraint(args.params);
-        // 	if (cr) {
-        // 		constraints.push(cr);
-        // 	}
-        // 	const cs = createStepConstraint(args.params);
-        // 	if (cs) {
-        // 		constraints.push(cs);
-        // 	}
-        // 	// Use `CompositeConstraint` to combine multiple constraints
-        // 	return new CompositeConstraint(constraints);
-        // },
-        // writer(_args) {
-        // 	return (target: BindingTarget, inValue) => {
-        // 		// Use `target.write()` to write the primitive value to the target,
-        // 		// or `target.writeProperty()` to write a property of the target
-        // 		target.write(inValue);
-        // 	};
-        // },
     },
     controller(args) {
         // Create a controller for the plugin

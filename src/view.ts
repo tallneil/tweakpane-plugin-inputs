@@ -1,10 +1,9 @@
-import {ClassName, PointNdTextController, Value, View, ViewProps} from '@tweakpane/core';
+import {ClassName, Value, View, ViewProps} from '@tweakpane/core';
 import {Stepper} from './stepper.js';
 
 interface Config {
 	value: Value<Stepper>;
 	viewProps: ViewProps;
-	//textView: PointNdTextController<Stepper>['view'];
 }
 
 // Create a class name generator from the view name
@@ -18,7 +17,6 @@ export class StepperPluginView implements View {
 	private btnMinus: HTMLElement;
 	private btnPlus: HTMLElement;
 	private numInput: HTMLElement;
-	//private textView_: PointNdTextController<InputEvent>['view'];
 
 	constructor(doc: Document, config: Config) {
 		// Create a root element for the plugin
@@ -58,7 +56,6 @@ export class StepperPluginView implements View {
 
 	private refresh_(): void {
 		const rawValue = this.value_.rawValue;
-		//this.numInput.textContent = rawValue;
 	}
 
 	private onValueChange_() {

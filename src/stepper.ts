@@ -15,7 +15,7 @@ export class Stepper {
 		if (typeof obj !== 'object' || obj === null) {
 			return false;
 		}
-		const val = (obj as Record<string, any>).min;
+		const val = (obj as Record<string, any>).val;
 		if (typeof val !== 'number') {
 			return false;
 		}

@@ -1,23 +1,16 @@
 import {
 	BaseInputParams,
-	BindingTarget,
 	CompositeConstraint,
 	createPlugin,
 	Constraint,
-	createNumberTextPropsObject,
 	createRangeConstraint,
 	createStepConstraint,
 	InputBindingPlugin,
-	PointNdTextController,
 	parseRecord,
-	parseNumber,
-	PointAxis,
-	TpError,
-	ValueMap,
 } from '@tweakpane/core';
 
 import {StepperController} from './controller.js';
-import {Stepper, StepperAssembly, StepperObject} from './stepper.js';
+import {Stepper, StepperObject} from './stepper.js';
 import {stepperFromUnknown, writeStepper} from './converter.js';
 import {StepperConstraint} from './constraint.js';
 
@@ -54,12 +47,7 @@ export const StepperInputPlugin: InputBindingPlugin<
 	StepperObject,
 	StepperInputParams
 > = createPlugin({
-	id: 'stepperInput',
-
-	// type: The plugin type.
-	// - 'input': Input binding
-	// - 'monitor': Monitor binding
-	// - 'blade': Blade without binding
+	id: 'input-stepper',
 	type: 'input',
 
 	accept(exValue: unknown, params: Record<string, unknown>) {
@@ -90,38 +78,6 @@ export const StepperInputPlugin: InputBindingPlugin<
 		reader: (_args) => stepperFromUnknown,
 		constraint: (args) => createConstraint(args.params),
 		writer: (_args) => writeStepper,
-
-		// reader(_args) {
-		// 	// return (exValue: unknown): number => {
-		// 	// 	// Convert an external unknown value into the internal value
-		// 	// 	return typeof exValue === 'number' ? exValue : 0;
-		// 	// };
-		// 	return Stepper.isObject(_args) ? new Stepper(_args.val) : new Stepper(0);
-		// },
-
-		// constraint(args) {
-		// 	// Create a value constraint from the user input
-		// 	const constraints = [];
-		// 	// You can reuse existing functions of the default plugins
-		// 	const cr = createRangeConstraint(args.params);
-		// 	if (cr) {
-		// 		constraints.push(cr);
-		// 	}
-		// 	const cs = createStepConstraint(args.params);
-		// 	if (cs) {
-		// 		constraints.push(cs);
-		// 	}
-		// 	// Use `CompositeConstraint` to combine multiple constraints
-		// 	return new CompositeConstraint(constraints);
-		// },
-
-		// writer(_args) {
-		// 	return (target: BindingTarget, inValue) => {
-		// 		// Use `target.write()` to write the primitive value to the target,
-		// 		// or `target.writeProperty()` to write a property of the target
-		// 		target.write(inValue);
-		// 	};
-		// },
 	},
 
 	controller(args) {

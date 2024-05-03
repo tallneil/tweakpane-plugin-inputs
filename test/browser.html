@@ -7,7 +7,7 @@
 <body>
 	<script type="module">
 		import {Pane} from '../node_modules/tweakpane/dist/tweakpane.min.js';
-		import * as TweakpaneTemplatePlugin from '../dist/tweakpane-plugin-template.js';
+		import * as StepperInputPlugin from '../dist/tweakpane-plugin-template.js'; // TweakpaneTemplatePlugin
 
 		const params = {
 			rangeStepInput: 2,
@@ -16,7 +16,7 @@
 		};
 
 		const pane = new Pane();
-		pane.registerPlugin(TweakpaneTemplatePlugin);
+		pane.registerPlugin(StepperInputPlugin); // TweakpaneTemplatePlugin
 
 		pane.addBinding(params, 'rangeStepInput', {
 			min: -10,
@@ -29,9 +29,9 @@
 		});
 		pane.addBinding(params, 'stepper', {
 			view: 'stepper',
-			min: -10,
-			max: 50,
-			step: 1,
+			// min: -10,
+			// max: 50,
+			// step: 1,
 		}); //.on('change', (ev) => {console.log(ev.value);});
 
 		window.pane = pane;
