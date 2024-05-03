@@ -1,9 +1,6 @@
-// Import core styles
 @use '../../node_modules/@tweakpane/core/lib/sass/tp';
 
-// Additional style for the plugin
 .#{tp.$prefix}-stepv {
-	// Extend a general input view style
 	@extend %tp-input;
 	display: flex;
 	gap: tp.cssVar('container-h-padding');
@@ -23,5 +20,4 @@
 		@extend %tp-input;
 		width: auto;
 	}
-
 }

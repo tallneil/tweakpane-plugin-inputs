@@ -6,6 +6,7 @@ import {
 	createRangeConstraint,
 	createStepConstraint,
 	InputBindingPlugin,
+	NumberInputParams,
 	parseRecord,
 } from '@tweakpane/core';
 
@@ -14,7 +15,7 @@ import {Stepper, StepperObject} from './stepper.js';
 import {stepperFromUnknown, writeStepper} from './converter.js';
 import {StepperConstraint} from './constraint.js';
 
-export interface StepperInputParams extends BaseInputParams {
+export interface StepperInputParams extends NumberInputParams, BaseInputParams {
 	max?: number;
 	min?: number;
 	step?: number;
