@@ -3,38 +3,30 @@ import {
 	ButtonPropsObject,
 	constrainRange,
 	Controller,
-	PointerHandler,
-	PointerHandlerEvent,
+	PointNdTextController,
+	parseNumber,
 	Value,
-	ValueMap,
 	ViewProps,
 } from '@tweakpane/core';
 
-import {PluginView} from './view.js';
+import {Stepper, StepperAssembly} from './stepper.js';
+import {StepperPluginView} from './view.js';
 
 interface Config {
-	value: Value<number>;
+	value: Value<Stepper>;
 	viewProps: ViewProps;
 }
 
 // Custom controller class should implement `Controller` interface
-export class PluginController implements Controller<PluginView> {
-	public readonly value: Value<number>;
-	public readonly view: PluginView;
+export class StepperController implements Controller<StepperPluginView> {
+	public readonly value: Value<Stepper>;
+	public readonly view: StepperPluginView;
 	public readonly viewProps: ViewProps;
+	//private readonly tc_: PointNdTextController<Stepper>;
 
 	constructor(doc: Document, config: Config) {
-		// this.onPoint_ = this.onPoint_.bind(this);
-
 		// Receive the bound value from the plugin
 		this.value = config.value;
-
-		// const bc = new ButtonController(doc, {
-			// props: ValueMap.fromObject<ButtonPropsObject>({
-			// 	...config.cellConfig(x, y),
-			// }),
-		// 	viewProps: ViewProps.create(),
-		// });
 
 		// and also view props
 		this.viewProps = config.viewProps;
@@ -44,36 +36,24 @@ export class PluginController implements Controller<PluginView> {
 		});
 
 		// Create a custom view
-		this.view = new PluginView(doc, {
+		this.view = new StepperPluginView(doc, {
 			value: this.value,
 			viewProps: this.viewProps,
 		});
+
+		// this.tc_ = new PointNdTextController(doc, {
+		// 	assembly: StepperAssembly,
+		// 	parser: parseNumber,
+		// 	value: this.value,
+		// 	viewProps: this.viewProps,
+		// });
+		// this.view.textElement.appendChild(this.tc_.view.element);
+
 
 		// Handle user interaction
 		// this.view.buttonElement.addEventListener('click', () => {
 		// 	// Update a model
 		// 	this.value.rawValue += 1;
 		// });
-
-
-
-		// // You can use `PointerHandler` to handle pointer events in the same way as Tweakpane do
-		// const ptHandler = new PointerHandler(this.view.element);
-		// ptHandler.emitter.on('down', this.onPoint_);
-		// ptHandler.emitter.on('move', this.onPoint_);
-		// ptHandler.emitter.on('up', this.onPoint_);
 	}
-
-	// private onPoint_(ev: PointerHandlerEvent) {
-	// 	const data = ev.data;
-	// 	if (!data.point) {
-	// 		return;
-	// 	}
-
-	// 	// Update the value by user input
-	// 	const dx =
-	// 		constrainRange(data.point.x / data.bounds.width + 0.05, 0, 1) * 10;
-	// 	const dy = data.point.y / 10;
-	// 	this.value.rawValue = Math.floor(dy) * 10 + dx;
-	// }
 }

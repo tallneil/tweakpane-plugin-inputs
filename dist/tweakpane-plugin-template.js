@@ -3504,7 +3504,7 @@ class CheckboxController {
     }
 }
 
-function createConstraint$6(params) {
+function createConstraint$7(params) {
     const constraints = [];
     const lc = createListConstraint(params.options);
     if (lc) {
@@ -3532,7 +3532,7 @@ createPlugin({
     },
     binding: {
         reader: (_args) => boolFromUnknown,
-        constraint: (args) => createConstraint$6(args.params),
+        constraint: (args) => createConstraint$7(args.params),
         writer: (_args) => writePrimitive,
     },
     controller: (args) => {
@@ -4615,7 +4615,7 @@ class ColorTextsView {
 function createFormatter$2(type) {
     return createNumberFormatter(type === 'float' ? 2 : 0);
 }
-function createConstraint$5(mode, type, index) {
+function createConstraint$6(mode, type, index) {
     const max = getColorMaxComponents(mode, type)[index];
     return new DefiniteRangeConstraint({
         min: 0,
@@ -4632,7 +4632,7 @@ function createComponentController(doc, config, index) {
             pointerScale: config.colorType === 'float' ? 0.01 : 1,
         }),
         value: createValue(0, {
-            constraint: createConstraint$5(config.colorMode, config.colorType, index),
+            constraint: createConstraint$6(config.colorMode, config.colorType, index),
         }),
         viewProps: config.viewProps,
     });
@@ -5556,7 +5556,7 @@ class SliderInputBindingApi extends BindingApi {
     }
 }
 
-function createConstraint$4(params, initialValue) {
+function createConstraint$5(params, initialValue) {
     const constraints = [];
     const sc = createStepConstraint(params, initialValue);
     if (sc) {
@@ -5589,7 +5589,7 @@ createPlugin({
     },
     binding: {
         reader: (_args) => numberFromUnknown,
-        constraint: (args) => createConstraint$4(args.params, args.initialValue),
+        constraint: (args) => createConstraint$5(args.params, args.initialValue),
         writer: (_args) => writePrimitive,
     },
     controller: (args) => {
@@ -5975,7 +5975,7 @@ function writePoint2d(target, value) {
     target.writeProperty('y', value.y);
 }
 
-function createConstraint$3(params, initialValue) {
+function createConstraint$4(params, initialValue) {
     return new PointNdConstraint({
         assembly: Point2dAssembly,
         components: [
@@ -6025,7 +6025,7 @@ createPlugin({
     },
     binding: {
         reader: () => point2dFromUnknown,
-        constraint: (args) => createConstraint$3(args.params, args.initialValue),
+        constraint: (args) => createConstraint$4(args.params, args.initialValue),
         equals: Point2d.equals,
         writer: () => writePoint2d,
     },
@@ -6105,7 +6105,7 @@ function writePoint3d(target, value) {
     target.writeProperty('z', value.z);
 }
 
-function createConstraint$2(params, initialValue) {
+function createConstraint$3(params, initialValue) {
     return new PointNdConstraint({
         assembly: Point3dAssembly,
         components: [
@@ -6132,7 +6132,7 @@ createPlugin({
     },
     binding: {
         reader: (_args) => point3dFromUnknown,
-        constraint: (args) => createConstraint$2(args.params, args.initialValue),
+        constraint: (args) => createConstraint$3(args.params, args.initialValue),
         equals: Point3d.equals,
         writer: (_args) => writePoint3d,
     },
@@ -6212,7 +6212,7 @@ function writePoint4d(target, value) {
     target.writeProperty('w', value.w);
 }
 
-function createConstraint$1(params, initialValue) {
+function createConstraint$2(params, initialValue) {
     return new PointNdConstraint({
         assembly: Point4dAssembly,
         components: [
@@ -6240,7 +6240,7 @@ createPlugin({
     },
     binding: {
         reader: (_args) => point4dFromUnknown,
-        constraint: (args) => createConstraint$1(args.params, args.initialValue),
+        constraint: (args) => createConstraint$2(args.params, args.initialValue),
         equals: Point4d.equals,
         writer: (_args) => writePoint4d,
     },
@@ -6270,7 +6270,7 @@ createPlugin({
     },
 });
 
-function createConstraint(params) {
+function createConstraint$1(params) {
     const constraints = [];
     const lc = createListConstraint(params.options);
     if (lc) {
@@ -6298,7 +6298,7 @@ createPlugin({
     },
     binding: {
         reader: (_args) => stringFromUnknown,
-        constraint: (args) => createConstraint(args.params),
+        constraint: (args) => createConstraint$1(args.params),
         writer: (_args) => writePrimitive,
     },
     controller: (args) => {
@@ -6749,7 +6749,8 @@ createPlugin({
 // ClassName('tmp') will generate a CSS class name like `tp-tmpv`
 const className = ClassName('step');
 // Custom view class should implement `View` interface
-class PluginView {
+class StepperPluginView {
+    //private textView_: PointNdTextController<InputEvent>['view'];
     constructor(doc, config) {
         // Create a root element for the plugin
         this.element = doc.createElement('div');
@@ -6780,8 +6781,8 @@ class PluginView {
         });
     }
     refresh_() {
-        const rawValue = this.value_.rawValue;
-        this.numInput.textContent = rawValue.toFixed(2);
+        this.value_.rawValue;
+        //this.numInput.textContent = rawValue;
     }
     onValueChange_() {
         this.refresh_();
@@ -6789,17 +6790,11 @@ class PluginView {
 }
 
 // Custom controller class should implement `Controller` interface
-class PluginController {
+class StepperController {
+    //private readonly tc_: PointNdTextController<Stepper>;
     constructor(doc, config) {
-        // this.onPoint_ = this.onPoint_.bind(this);
         // Receive the bound value from the plugin
         this.value = config.value;
-        // const bc = new ButtonController(doc, {
-        // props: ValueMap.fromObject<ButtonPropsObject>({
-        // 	...config.cellConfig(x, y),
-        // }),
-        // 	viewProps: ViewProps.create(),
-        // });
         // and also view props
         this.viewProps = config.viewProps;
         this.viewProps.handleDispose(() => {
@@ -6807,23 +6802,90 @@ class PluginController {
             console.log('TODO: dispose controller');
         });
         // Create a custom view
-        this.view = new PluginView(doc, {
+        this.view = new StepperPluginView(doc, {
             value: this.value,
             viewProps: this.viewProps,
         });
+        // this.tc_ = new PointNdTextController(doc, {
+        // 	assembly: StepperAssembly,
+        // 	parser: parseNumber,
+        // 	value: this.value,
+        // 	viewProps: this.viewProps,
+        // });
+        // this.view.textElement.appendChild(this.tc_.view.element);
         // Handle user interaction
         // this.view.buttonElement.addEventListener('click', () => {
         // 	// Update a model
         // 	this.value.rawValue += 1;
         // });
-        // // You can use `PointerHandler` to handle pointer events in the same way as Tweakpane do
-        // const ptHandler = new PointerHandler(this.view.element);
-        // ptHandler.emitter.on('down', this.onPoint_);
-        // ptHandler.emitter.on('move', this.onPoint_);
-        // ptHandler.emitter.on('up', this.onPoint_);
     }
 }
 
+class Stepper {
+    constructor(val) {
+        this.val = val;
+    }
+    static isObject(obj) {
+        if (typeof obj !== 'object' || obj === null) {
+            return false;
+        }
+        const val = obj.min;
+        if (typeof val !== 'number') {
+            return false;
+        }
+        return true;
+    }
+    get getValue() {
+        return this.val;
+    }
+    toObject() {
+        return {
+            val: this.val,
+        };
+    }
+}
+
+function stepperFromUnknown(value) {
+    return Stepper.isObject(value)
+        ? new Stepper(value.val)
+        : new Stepper(0);
+}
+function writeStepper(target, value) {
+    target.writeProperty('val', value.val);
+}
+
+class StepperConstraint {
+    constructor(edge) {
+        this.edge = edge;
+    }
+    constrain(value) {
+        return value;
+        // if (value.min <= value.max) {
+        // 	return new Interval(
+        // 		this.edge?.constrain(value.min) ?? value.min,
+        // 		this.edge?.constrain(value.max) ?? value.max,
+        // 	);
+        // }
+        // const c = (value.min + value.max) / 2;
+        // return new Interval(
+        // 	this.edge?.constrain(c) ?? c,
+        // 	this.edge?.constrain(c) ?? c,
+        // );
+    }
+}
+
+function createConstraint(params) {
+    const constraints = [];
+    const rc = createRangeConstraint(params);
+    if (rc) {
+        constraints.push(rc);
+    }
+    const sc = createStepConstraint(params);
+    if (sc) {
+        constraints.push(sc);
+    }
+    return new StepperConstraint(new CompositeConstraint(constraints));
+}
 // NOTE: JSDoc comments of `InputBindingPlugin` can be useful to know details about each property
 //
 // `InputBindingPlugin<In, Ex, P>` means...
@@ -6839,8 +6901,7 @@ const StepperInputPlugin = createPlugin({
     // - 'blade': Blade without binding
     type: 'input',
     accept(exValue, params) {
-        if (typeof exValue !== 'number') {
-            // Return null to deny the user input
+        if (!Stepper.isObject(exValue)) {
             return null;
         }
         // Parse parameters object
@@ -6864,38 +6925,42 @@ const StepperInputPlugin = createPlugin({
         };
     },
     binding: {
-        reader(_args) {
-            return (exValue) => {
-                // Convert an external unknown value into the internal value
-                return typeof exValue === 'number' ? exValue : 0;
-            };
-        },
-        constraint(args) {
-            // Create a value constraint from the user input
-            const constraints = [];
-            // You can reuse existing functions of the default plugins
-            const cr = createRangeConstraint(args.params);
-            if (cr) {
-                constraints.push(cr);
-            }
-            const cs = createStepConstraint(args.params);
-            if (cs) {
-                constraints.push(cs);
-            }
-            // Use `CompositeConstraint` to combine multiple constraints
-            return new CompositeConstraint(constraints);
-        },
-        writer(_args) {
-            return (target, inValue) => {
-                // Use `target.write()` to write the primitive value to the target,
-                // or `target.writeProperty()` to write a property of the target
-                target.write(inValue);
-            };
-        },
+        reader: (_args) => stepperFromUnknown,
+        constraint: (args) => createConstraint(args.params),
+        writer: (_args) => writeStepper,
+        // reader(_args) {
+        // 	// return (exValue: unknown): number => {
+        // 	// 	// Convert an external unknown value into the internal value
+        // 	// 	return typeof exValue === 'number' ? exValue : 0;
+        // 	// };
+        // 	return Stepper.isObject(_args) ? new Stepper(_args.val) : new Stepper(0);
+        // },
+        // constraint(args) {
+        // 	// Create a value constraint from the user input
+        // 	const constraints = [];
+        // 	// You can reuse existing functions of the default plugins
+        // 	const cr = createRangeConstraint(args.params);
+        // 	if (cr) {
+        // 		constraints.push(cr);
+        // 	}
+        // 	const cs = createStepConstraint(args.params);
+        // 	if (cs) {
+        // 		constraints.push(cs);
+        // 	}
+        // 	// Use `CompositeConstraint` to combine multiple constraints
+        // 	return new CompositeConstraint(constraints);
+        // },
+        // writer(_args) {
+        // 	return (target: BindingTarget, inValue) => {
+        // 		// Use `target.write()` to write the primitive value to the target,
+        // 		// or `target.writeProperty()` to write a property of the target
+        // 		target.write(inValue);
+        // 	};
+        // },
     },
     controller(args) {
         // Create a controller for the plugin
-        return new PluginController(args.document, {
+        return new StepperController(args.document, {
             value: args.value,
             viewProps: args.viewProps,
         });
