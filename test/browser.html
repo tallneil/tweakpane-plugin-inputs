@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+	<script type="module">
+		import {Pane} from '../node_modules/tweakpane/dist/tweakpane.min.js';
+		import * as TweakpaneTemplatePlugin from '../dist/tweakpane-plugin-template.js';
+
+		const params = {
+			prop: 3,
+		};
+
+		const pane = new Pane();
+		// Register plugin
+		pane.registerPlugin(TweakpaneTemplatePlugin);
+
+		// TODO: Update parameters for your plugin
+		pane.addBinding(params, 'prop', {
+			view: 'dots',
+		}).on('change', (ev) => {
+			console.log(ev.value);
+		});
+
+		window.pane = pane;
+	</script>
+</body>
+</html>
