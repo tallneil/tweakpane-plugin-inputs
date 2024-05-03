@@ -6747,11 +6747,10 @@ createPlugin({
 
 // Create a class name generator from the view name
 // ClassName('tmp') will generate a CSS class name like `tp-tmpv`
-const className = ClassName('tmp');
+const className = ClassName('step');
 // Custom view class should implement `View` interface
 class PluginView {
     constructor(doc, config) {
-        this.dotElems_ = [];
         // Create a root element for the plugin
         this.element = doc.createElement('div');
         this.element.classList.add(className());
@@ -6762,9 +6761,17 @@ class PluginView {
         // Handle 'change' event of the value
         this.value_.emitter.on('change', this.onValueChange_.bind(this));
         // Create child elements
-        this.textElem_ = doc.createElement('div');
-        this.textElem_.classList.add(className('text'));
-        this.element.appendChild(this.textElem_);
+        this.btnMinus = doc.createElement('button');
+        this.btnMinus.textContent = '-';
+        this.btnMinus.classList.add(className('b'));
+        this.element.appendChild(this.btnMinus);
+        this.btnPlus = doc.createElement('button');
+        this.btnPlus.textContent = '+';
+        this.btnPlus.classList.add(className('b'));
+        this.element.appendChild(this.btnPlus);
+        this.numInput = doc.createElement('input');
+        this.numInput.classList.add(className('i'));
+        this.element.appendChild(this.numInput);
         // Apply the initial value
         this.refresh_();
         config.viewProps.handleDispose(() => {
@@ -6774,29 +6781,7 @@ class PluginView {
     }
     refresh_() {
         const rawValue = this.value_.rawValue;
-        this.textElem_.textContent = rawValue.toFixed(2);
-        while (this.dotElems_.length > 0) {
-            const elem = this.dotElems_.shift();
-            if (elem) {
-                this.element.removeChild(elem);
-            }
-        }
-        const doc = this.element.ownerDocument;
-        const dotCount = Math.floor(rawValue);
-        for (let i = 0; i < dotCount; i++) {
-            const dotElem = doc.createElement('div');
-            dotElem.classList.add(className('dot'));
-            if (i === dotCount - 1) {
-                const fracElem = doc.createElement('div');
-                fracElem.classList.add(className('frac'));
-                const frac = rawValue - Math.floor(rawValue);
-                fracElem.style.width = `${frac * 100}%`;
-                fracElem.style.opacity = String(mapRange(frac, 0, 1, 1, 0.2));
-                dotElem.appendChild(fracElem);
-            }
-            this.dotElems_.push(dotElem);
-            this.element.appendChild(dotElem);
-        }
+        this.numInput.textContent = rawValue.toFixed(2);
     }
     onValueChange_() {
         this.refresh_();
@@ -6806,9 +6791,15 @@ class PluginView {
 // Custom controller class should implement `Controller` interface
 class PluginController {
     constructor(doc, config) {
-        this.onPoint_ = this.onPoint_.bind(this);
+        // this.onPoint_ = this.onPoint_.bind(this);
         // Receive the bound value from the plugin
         this.value = config.value;
+        // const bc = new ButtonController(doc, {
+        // props: ValueMap.fromObject<ButtonPropsObject>({
+        // 	...config.cellConfig(x, y),
+        // }),
+        // 	viewProps: ViewProps.create(),
+        // });
         // and also view props
         this.viewProps = config.viewProps;
         this.viewProps.handleDispose(() => {
@@ -6820,21 +6811,16 @@ class PluginController {
             value: this.value,
             viewProps: this.viewProps,
         });
-        // You can use `PointerHandler` to handle pointer events in the same way as Tweakpane do
-        const ptHandler = new PointerHandler(this.view.element);
-        ptHandler.emitter.on('down', this.onPoint_);
-        ptHandler.emitter.on('move', this.onPoint_);
-        ptHandler.emitter.on('up', this.onPoint_);
-    }
-    onPoint_(ev) {
-        const data = ev.data;
-        if (!data.point) {
-            return;
-        }
-        // Update the value by user input
-        const dx = constrainRange(data.point.x / data.bounds.width + 0.05, 0, 1) * 10;
-        const dy = data.point.y / 10;
-        this.value.rawValue = Math.floor(dy) * 10 + dx;
+        // Handle user interaction
+        // this.view.buttonElement.addEventListener('click', () => {
+        // 	// Update a model
+        // 	this.value.rawValue += 1;
+        // });
+        // // You can use `PointerHandler` to handle pointer events in the same way as Tweakpane do
+        // const ptHandler = new PointerHandler(this.view.element);
+        // ptHandler.emitter.on('down', this.onPoint_);
+        // ptHandler.emitter.on('move', this.onPoint_);
+        // ptHandler.emitter.on('up', this.onPoint_);
     }
 }
 
@@ -6845,8 +6831,8 @@ class PluginController {
 // - converts `Ex` into `In` and holds it
 // - P is the type of the parsed parameters
 //
-const TemplateInputPlugin = createPlugin({
-    id: 'input-template',
+const StepperInputPlugin = createPlugin({
+    id: 'stepperInput',
     // type: The plugin type.
     // - 'input': Input binding
     // - 'monitor': Monitor binding
@@ -6858,13 +6844,16 @@ const TemplateInputPlugin = createPlugin({
             return null;
         }
         // Parse parameters object
-        const result = parseRecord(params, (p) => ({
-            // `view` option may be useful to provide a custom control for primitive values
-            view: p.required.constant('dots'),
-            max: p.optional.number,
-            min: p.optional.number,
-            step: p.optional.number,
-        }));
+        const result = parseRecord(params, (p) => {
+            var _a;
+            return ({
+                // `view` option may be useful to provide a custom control for primitive values
+                view: p.required.constant('stepper'),
+                max: p.optional.number,
+                min: p.optional.number,
+                step: (_a = p.optional.number) !== null && _a !== void 0 ? _a : 1,
+            });
+        });
         if (!result) {
             return null;
         }
@@ -6917,8 +6906,8 @@ const TemplateInputPlugin = createPlugin({
 const id = 'template';
 // This plugin template injects a compiled CSS by @rollup/plugin-replace
 // See rollup.config.js for details
-const css = '.tp-tmpv{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-color:rgba(0,0,0,0);border-width:0;font-family:inherit;font-size:inherit;font-weight:inherit;margin:0;outline:none;padding:0}.tp-tmpv{background-color:var(--in-bg);border-radius:var(--bld-br);box-sizing:border-box;color:var(--in-fg);font-family:inherit;height:var(--cnt-usz);line-height:var(--cnt-usz);min-width:0;width:100%}.tp-tmpv:hover{background-color:var(--in-bg-h)}.tp-tmpv:focus{background-color:var(--in-bg-f)}.tp-tmpv:active{background-color:var(--in-bg-a)}.tp-tmpv:disabled{opacity:.5}.tp-tmpv{cursor:pointer;display:grid;grid-template-columns:repeat(10, 1fr);grid-template-rows:repeat(auto-fit, 10px);height:calc(var(--cnt-usz)*3);overflow:hidden;position:relative}.tp-tmpv.tp-v-disabled{opacity:.5}.tp-tmpv_text{color:var(--in-fg);bottom:2px;font-size:.9em;line-height:.9;opacity:.5;position:absolute;right:2px}.tp-tmpv_dot{height:10px;line-height:10px;position:relative;text-align:center}.tp-tmpv_dot::before{background-color:var(--in-fg);content:"";border-radius:1px;height:2px;left:50%;margin-left:-1px;margin-top:-1px;position:absolute;top:50%;width:2px}.tp-tmpv_frac{background-color:var(--in-fg);border-radius:1px;height:2px;left:50%;margin-top:-1px;position:absolute;top:50%}';
+const css = '.tp-stepv,.tp-stepv_i,.tp-stepv_b{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-color:rgba(0,0,0,0);border-width:0;font-family:inherit;font-size:inherit;font-weight:inherit;margin:0;outline:none;padding:0}.tp-stepv_b{background-color:var(--btn-bg);border-radius:var(--bld-br);color:var(--btn-fg);cursor:pointer;display:block;font-weight:bold;height:var(--cnt-usz);line-height:var(--cnt-usz);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tp-stepv_b:hover{background-color:var(--btn-bg-h)}.tp-stepv_b:focus{background-color:var(--btn-bg-f)}.tp-stepv_b:active{background-color:var(--btn-bg-a)}.tp-stepv_b:disabled{opacity:.5}.tp-stepv,.tp-stepv_i{background-color:var(--in-bg);border-radius:var(--bld-br);box-sizing:border-box;color:var(--in-fg);font-family:inherit;height:var(--cnt-usz);line-height:var(--cnt-usz);min-width:0;width:100%}.tp-stepv:hover,.tp-stepv_i:hover{background-color:var(--in-bg-h)}.tp-stepv:focus,.tp-stepv_i:focus{background-color:var(--in-bg-f)}.tp-stepv:active,.tp-stepv_i:active{background-color:var(--in-bg-a)}.tp-stepv:disabled,.tp-stepv_i:disabled{opacity:.5}.tp-stepv{display:flex;gap:var(--cnt-hp)}.tp-stepv.tp-v-disabled{opacity:.5}.tp-stepv_b{position:relative;width:var(--cnt-usz)}.tp-stepv_i{width:auto}';
 // Export your plugin(s) as a constant `plugins`
-const plugins = [TemplateInputPlugin];
+const plugins = [StepperInputPlugin];
 
 export { css, id, plugins };

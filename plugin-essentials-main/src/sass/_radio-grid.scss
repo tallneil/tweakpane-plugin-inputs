@@ -1,0 +1,16 @@
+@use '../../node_modules/@tweakpane/core/lib/sass/tp';
+
+.#{tp.$prefix}-radgridv {
+	border-radius: tp.cssVar('blade-border-radius');
+	display: grid;
+	overflow: hidden;
+	gap: 2px;
+
+	&.#{tp.$prefix}-v-disabled {
+		opacity: 0.5;
+	}
+
+	& .#{tp.$prefix}-radv_b {
+		border-radius: 0;
+	}
+}

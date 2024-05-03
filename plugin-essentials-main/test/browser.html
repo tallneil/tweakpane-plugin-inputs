@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+		body {
+			margin: 0;
+		}
+		.wrapper {
+			align-items: start;
+			background-color: #f1f2f3;
+			box-sizing: border-box;
+			display: grid;
+			gap: 32px;
+			grid-template-columns: repeat(auto-fit, 256px);
+			justify-content: center;
+			margin-left: auto;
+			margin-right: auto;
+			margin-top: 32px;
+			max-width: 960px;
+			padding: 64px;
+		}
+	</style>
+</head>
+<body>
+	<div class="wrapper">
+	</div>
+	<script type="module">
+		import {Pane} from '../node_modules/tweakpane/dist/tweakpane.js';
+		import * as TweakpaneEssentialsPlugin from '../dist/tweakpane-plugin-essentials.js';
+
+		const params = {
+			interval: {min: 40, max: 60},
+			radiogrid: 25,
+		};
+		const panes = [
+			'Input bindings',
+			'Blades',
+		].map((title) => {
+			const pane = new Pane({
+				container: document.querySelector('.wrapper'),
+				title: title,
+			});
+
+			// Register plugin
+			pane.registerPlugin(TweakpaneEssentialsPlugin);
+
+			return pane;
+		});
+
+		// Input bindings
+		panes[0].addBinding(params, 'interval', {
+			format: (v) => v.toFixed(1),
+			min: 20,
+			max: 80,
+		}).on('change', (ev) => {
+			console.log(ev);
+		});
+
+		const scales = [10, 20, 25, 50, 75, 100];
+		panes[0].addBinding(params, 'radiogrid', {
+			view: 'radiogrid',
+			groupName: 'scale',
+			size: [3, 2],
+			cells: (x, y) => ({
+				title: `${scales[y * 3 + x]}%`,
+				value: scales[y * 3 + x],
+			}),
+			label: 'radiogrid',
+		}).on('change', (ev) => {
+			console.log(ev);
+		});
+
+		// Blades
+		const fpsGraph = panes[1].addBlade({
+			view: 'fpsgraph',
+
+			label: 'fpsgraph',
+			rows: 2,
+		});
+		function render() {
+			fpsGraph.begin();
+
+			// Rendering
+
+			fpsGraph.end();
+			requestAnimationFrame(render);
+		}
+		render();
+
+		panes[1].addBlade({
+			view: 'cubicbezier',
+			value: [0.5, 0, 0.5, 1],
+
+			expanded: true,
+			label: 'cubic\nbezier',
+			picker: 'inline',
+		}).on('change', (ev) => {
+			console.log(ev);
+		});
+
+		panes[1].addBlade({
+			view: 'buttongrid',
+			size: [3, 3],
+			cells: (x, y) => ({
+				title: [
+					['NW', 'N', 'NE'],
+					['W',  '*', 'E'],
+					['SW', 'S', 'SE'],
+				][y][x],
+			}),
+			label: 'button\ngrid',
+		}).on('click', (ev) => {
+			console.log(ev);
+		});
+
+		window.panes = panes;
+
+		if (location.search === '?readme') {
+			panes.forEach((pane) => {
+				pane.children.forEach((child) => {
+					const wrapperElem = document.createElement('div');
+					wrapperElem.classList.add('wrapper');
+					document.body.appendChild(wrapperElem);
+
+					const newPane = new Pane({
+						container: wrapperElem,
+					});
+					newPane.registerPlugin(TweakpaneEssentialsPlugin);
+					newPane.add(child);
+				});
+			});
+		}
+	</script>
+</body>
+</html>

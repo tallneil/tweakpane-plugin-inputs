@@ -10,17 +10,14 @@
 		import * as TweakpaneTemplatePlugin from '../dist/tweakpane-plugin-template.js';
 
 		const params = {
-			dotInput: 25.5,
 			rangeStepInput: 2,
 			numberStepInput: 2,
+			stepper: 2,
 		};
 
 		const pane = new Pane();
 		pane.registerPlugin(TweakpaneTemplatePlugin);
 
-		pane.addBinding(params, 'dotInput', {
-			view: 'dots',
-		}); //.on('change', (ev) => {console.log(ev.value);});
 		pane.addBinding(params, 'rangeStepInput', {
 			min: -10,
 			step: 1,
@@ -30,6 +27,12 @@
 			min: -10,
 			step: 1,
 		});
+		pane.addBinding(params, 'stepper', {
+			view: 'stepper',
+			min: -10,
+			max: 50,
+			step: 1,
+		}); //.on('change', (ev) => {console.log(ev.value);});
 
 		window.pane = pane;
 	</script>

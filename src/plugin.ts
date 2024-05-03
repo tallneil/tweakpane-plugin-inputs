@@ -15,7 +15,7 @@ export interface PluginInputParams extends BaseInputParams {
 	max?: number;
 	min?: number;
 	step?: number;
-	view: 'dots';
+	view: 'stepper';
 }
 
 // NOTE: JSDoc comments of `InputBindingPlugin` can be useful to know details about each property
@@ -25,12 +25,12 @@ export interface PluginInputParams extends BaseInputParams {
 // - converts `Ex` into `In` and holds it
 // - P is the type of the parsed parameters
 //
-export const TemplateInputPlugin: InputBindingPlugin<
+export const StepperInputPlugin: InputBindingPlugin<
 	number,
 	number,
 	PluginInputParams
 > = createPlugin({
-	id: 'input-template',
+	id: 'stepperInput',
 
 	// type: The plugin type.
 	// - 'input': Input binding
@@ -47,11 +47,10 @@ export const TemplateInputPlugin: InputBindingPlugin<
 		// Parse parameters object
 		const result = parseRecord<PluginInputParams>(params, (p) => ({
 			// `view` option may be useful to provide a custom control for primitive values
-			view: p.required.constant('dots'),
-
+			view: p.required.constant('stepper'),
 			max: p.optional.number,
 			min: p.optional.number,
-			step: p.optional.number,
+			step: p.optional.number ?? 1,
 		}));
 		if (!result) {
 			return null;

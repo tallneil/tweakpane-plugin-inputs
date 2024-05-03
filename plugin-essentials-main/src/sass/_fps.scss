@@ -1,0 +1,18 @@
+@use '../../node_modules/@tweakpane/core/lib/sass/tp';
+
+.#{tp.$prefix}-fpsv {
+	position: relative;
+
+	&_l {
+		bottom: 4px;
+		color: tp.cssVar('monitor-fg');
+		line-height: 1;
+		right: 4px;
+		pointer-events: none;
+		position: absolute;
+	}
+	&_u {
+		margin-left: 0.2em;
+		opacity: 0.7;
+	}
+}
