@@ -36,7 +36,7 @@ export class StepperTextController implements ValueController<Stepper, StepperTe
 		} as PointAxis;
 		this.tc_ = new PointNdTextController(doc, {
 			assembly: StepperAssembly,
-			axes: [axis], // axes: [axis, axis], // is this where the 2 fields are being created?
+			axes: [axis],// axes: [axis, axis], // is this where the 2 fields are being created?
 			parser: config.parser,
 			value: this.value,
 			viewProps: config.viewProps,
