@@ -1,59 +1,30 @@
-# Tweakpane plugin template
-Plugin template of an input binding for [Tweakpane][tweakpane].
+# Inputs for Tweakpane
+Additional inputs for [Tweakpane][tweakpane] GUI, including a numerical stepper input.
 
+## Stepper input
+The stepper is an alternative to range slider input, that is better-suited for small sets of discrete ranges. 
 
-# For plugin developers
-TODO: Delete this section before publishing your plugin.
+### Params
+`min`: Range minimum (optional)
+`max`: Range maximum (optional)
+`step`: Step value (default value: 1)
 
+### Features 
+* Use the `-` and `+` buttons to decrement or increment value by `step`
+* Support for Tweakpane input features, including `keypad` and `point and slide`. 
 
-## Quick start
-- Install dependencies:
-  ```
-  % npm install
-  ```
-- Build source codes and watch changes:
-  ```
-  % npm start
-  ```
-- Open `test/browser.html` to see the result.
-
-
-## File structure
-```
-|- src
-|  |- sass ............ Plugin CSS
-|  |- index.ts ........ Entrypoint
-|  |- plugin.ts ....... Plugin
-|  |- controller.ts ... Controller for the custom view
-|  `- view.ts ......... Custom view
-|- dist ............... Compiled files
-`- test
-   `- browser.html .... Plugin labo
-```
-
-
-## Version compatibility
-
-| Tweakpane | plugin-template |
-| --------- | --------------- |
-| 4.x       | [main](https://github.com/tweakpane/plugin-template/tree/main) |
-| 3.x       | [v3](https://github.com/tweakpane/plugin-template/tree/v3) |
-
-
-# For plugin users
 
 
 ## Installation
-
 
 ### Browser
 ```html
 <script type="module">
   import {Pane} as Tweakpane from './tweakpane.min.js';
-  import * as TweakpaneTemplatePlugin from './tweakpane-plugin-template.min.js';
+  import * as TweakpanePluginInputs from './tweakpane-plugin-inputs.js';
 
   const pane = new Pane();
-  pane.registerPlugin(TweakpaneTemplatePlugin);
+  pane.registerPlugin(TweakpanePluginInputs);
 </script>
 ```
 
@@ -61,10 +32,10 @@ TODO: Delete this section before publishing your plugin.
 ### Package
 ```js
 import {Pane} from 'tweakpane';
-import * as TemplatePlugin from 'tweakpane-plugin-template';
+import * as TweakpanePluginInputs from 'tweakpane-plugin-inputs';
 
 const pane = new Pane();
-pane.registerPlugin(TemplatePlugin);
+pane.registerPlugin(TweakpanePluginInputs);
 ```
 
 
@@ -74,13 +45,10 @@ const params = {
   prop: 3,
 };
 
-// TODO: Update parameters for your plugin
 pane.addInput(params, 'prop', {
-  view: 'dots',
-}).on('change', (ev) => {
-  console.log(ev.value);
+  view: 'stepper',
+  min: 0,
+  max: 5, 
+  step: 0.5
 });
 ```
-
-
-[tweakpane]: https://github.com/cocopon/tweakpane/
