@@ -30,7 +30,7 @@ export const DotsInputPlugin: InputBindingPlugin<
 	number,
 	DotsInputParams
 > = createPlugin({
-	id: 'input-template',
+	id: 'input-dots',
 
 	// type: The plugin type.
 	// - 'input': Input binding

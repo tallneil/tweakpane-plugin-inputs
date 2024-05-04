@@ -7,7 +7,7 @@ interface Config {
 
 // Create a class name generator from the view name
 // ClassName('tmp') will generate a CSS class name like `tp-tmpv`
-const className = ClassName('tmp');
+const className = ClassName('dots');
 
 // Custom view class should implement `View` interface
 export class DotsView implements View {
