@@ -19,9 +19,4 @@
 		position: relative;
 		width: tp.cssVar('container-unit-size');
 	}
-
-	&_i {
-		@extend %tp-input;
-		width: auto;
-	}
 }
