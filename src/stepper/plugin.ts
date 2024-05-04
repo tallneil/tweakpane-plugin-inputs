@@ -1,28 +1,32 @@
 import {
 	BaseInputParams,
 	CompositeConstraint,
-	createPlugin,
 	Constraint,
+	createNumberTextInputParamsParser,
+	createNumberTextPropsObject,
+	createPlugin,
 	createRangeConstraint,
 	createStepConstraint,
+	DefiniteRangeConstraint,
+	findConstraint,
 	InputBindingPlugin,
 	NumberInputParams,
+	parseNumber,
 	parseRecord,
+	PointAxis,
+	PointNdTextController,
+	TpError,
+	ValueMap,
 } from '@tweakpane/core';
 
-import {StepperController} from './controller/stepper.js';
-import {Stepper, StepperObject} from './model/stepper.js';
-import {stepperFromUnknown, writeStepper} from './converter/stepper.js';
-import {StepperConstraint} from './constraint/stepper.js';
+import {IntervalConstraint} from './constraint/stepper.js';
+import {RangeSliderTextController} from './controller/stepper-text.js';
+import {intervalFromUnknown, writeInterval} from './converter/stepper.js';
+import {Interval, IntervalAssembly, IntervalObject} from './model/stepper.js';
 
-export interface StepperInputParams extends NumberInputParams, BaseInputParams {
-	max?: number;
-	min?: number;
-	step?: number;
-	view: 'stepper';
-}
+interface IntervalInputParams extends NumberInputParams, BaseInputParams {}
 
-function createConstraint(params: StepperInputParams): Constraint<Stepper> {
+function createConstraint(params: IntervalInputParams): Constraint<Interval> {
 	const constraints = [];
 	const rc = createRangeConstraint(params);
 	if (rc) {
@@ -33,58 +37,75 @@ function createConstraint(params: StepperInputParams): Constraint<Stepper> {
 		constraints.push(sc);
 	}
 
-	return new StepperConstraint(new CompositeConstraint(constraints));
+	return new IntervalConstraint(new CompositeConstraint(constraints));
 }
 
-// NOTE: JSDoc comments of `InputBindingPlugin` can be useful to know details about each property
-//
-// `InputBindingPlugin<In, Ex, P>` means...
-// - The plugin receives the bound value as `Ex`,
-// - converts `Ex` into `In` and holds it
-// - P is the type of the parsed parameters
-//
 export const StepperInputPlugin: InputBindingPlugin<
-	Stepper,
-	StepperObject,
-	StepperInputParams
+	Interval,
+	IntervalObject,
+	IntervalInputParams
 > = createPlugin({
-	id: 'input-stepper',
+	id: 'input-interval',
 	type: 'input',
 
-	accept(exValue: unknown, params: Record<string, unknown>) {
-		if (!Stepper.isObject(exValue)) {
+	accept: (exValue, params) => {
+		if (!Interval.isObject(exValue)) {
 			return null;
 		}
 
-		// Parse parameters object
-		const result = parseRecord<StepperInputParams>(params, (p) => ({
-			// `view` option may be useful to provide a custom control for primitive values
-			view: p.required.constant('stepper'),
-			max: p.optional.number,
-			min: p.optional.number,
-			step: p.optional.number ?? 1,
+		const result = parseRecord<IntervalInputParams>(params, (p) => ({
+			...createNumberTextInputParamsParser(p),
+			readonly: p.optional.constant(false),
 		}));
-		if (!result) {
-			return null;
+		return result
+			? {
+					initialValue: new Interval(exValue.min, exValue.max),
+					params: result,
+			  }
+			: null;
+	},
+	binding: {
+		reader: (_args) => intervalFromUnknown,
+		constraint: (args) => createConstraint(args.params),
+		equals: Interval.equals,
+		writer: (_args) => writeInterval,
+	},
+	controller(args) {
+		const v = args.value;
+		const c = args.constraint;
+		if (!(c instanceof IntervalConstraint)) {
+			throw TpError.shouldNeverHappen();
 		}
 
-		// Return a typed value and params to accept the user input
-		return {
-			initialValue: exValue,
-			params: result,
-		};
-	},
+		const midValue = (v.rawValue.min + v.rawValue.max) / 2;
+		const textProps = ValueMap.fromObject(
+			createNumberTextPropsObject(args.params, midValue),
+		);
+		const drc = c.edge && findConstraint(c.edge, DefiniteRangeConstraint);
+		if (drc) {
+			return new RangeSliderTextController(args.document, {
+				constraint: c.edge,
+				parser: parseNumber,
+				sliderProps: new ValueMap({
+					keyScale: textProps.value('keyScale'),
+					max: drc.values.value('max'),
+					min: drc.values.value('min'),
+				}),
+				textProps: textProps,
+				value: v,
+				viewProps: args.viewProps,
+			});
+		}
 
-	binding: {
-		reader: (_args) => stepperFromUnknown,
-		constraint: (args) => createConstraint(args.params),
-		writer: (_args) => writeStepper,
-	},
-
-	controller(args) {
-		// Create a controller for the plugin
-		return new StepperController(args.document, {
-			value: args.value,
+		const axis = {
+			constraint: c.edge,
+			textProps: textProps,
+		} as PointAxis;
+		return new PointNdTextController(args.document, {
+			assembly: IntervalAssembly,
+			axes: [axis, axis],
+			parser: parseNumber,
+			value: v,
 			viewProps: args.viewProps,
 		});
 	},

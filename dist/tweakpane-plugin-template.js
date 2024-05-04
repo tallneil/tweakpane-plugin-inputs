@@ -7174,19 +7174,19 @@ function cubicBezierFromString(text) {
     return new CubicBezier(...(comps !== null && comps !== void 0 ? comps : COMPS_EMPTY));
 }
 
-const className$8 = ClassName('cbz');
+const className$9 = ClassName('cbz');
 class CubicBezierView {
     constructor(doc, config) {
         this.element = doc.createElement('div');
-        this.element.classList.add(className$8());
+        this.element.classList.add(className$9());
         config.viewProps.bindClassModifiers(this.element);
-        config.foldable.bindExpandedClass(this.element, className$8(undefined, 'expanded'));
-        bindValueMap(config.foldable, 'completed', valueToClassName(this.element, className$8(undefined, 'cpl')));
+        config.foldable.bindExpandedClass(this.element, className$9(undefined, 'expanded'));
+        bindValueMap(config.foldable, 'completed', valueToClassName(this.element, className$9(undefined, 'cpl')));
         const headElem = doc.createElement('div');
-        headElem.classList.add(className$8('h'));
+        headElem.classList.add(className$9('h'));
         this.element.appendChild(headElem);
         const buttonElem = doc.createElement('button');
-        buttonElem.classList.add(className$8('b'));
+        buttonElem.classList.add(className$9('b'));
         config.viewProps.bindDisabled(buttonElem);
         const iconElem = doc.createElementNS(SVG_NS, 'svg');
         iconElem.innerHTML = '<path d="M2 13C8 13 8 3 14 3"/>';
@@ -7194,12 +7194,12 @@ class CubicBezierView {
         headElem.appendChild(buttonElem);
         this.buttonElement = buttonElem;
         const textElem = doc.createElement('div');
-        textElem.classList.add(className$8('t'));
+        textElem.classList.add(className$9('t'));
         headElem.appendChild(textElem);
         this.textElement = textElem;
         if (config.pickerLayout === 'inline') {
             const pickerElem = doc.createElement('div');
-            pickerElem.classList.add(className$8('p'));
+            pickerElem.classList.add(className$9('p'));
             this.element.appendChild(pickerElem);
             this.pickerElement = pickerElem;
         }
@@ -7209,18 +7209,18 @@ class CubicBezierView {
     }
 }
 
-const className$7 = ClassName('cbzp');
+const className$8 = ClassName('cbzp');
 class CubicBezierPickerView {
     constructor(doc, config) {
         this.element = doc.createElement('div');
-        this.element.classList.add(className$7());
+        this.element.classList.add(className$8());
         config.viewProps.bindClassModifiers(this.element);
         const graphElem = doc.createElement('div');
-        graphElem.classList.add(className$7('g'));
+        graphElem.classList.add(className$8('g'));
         this.element.appendChild(graphElem);
         this.graphElement = graphElem;
         const textElem = doc.createElement('div');
-        textElem.classList.add(className$7('t'));
+        textElem.classList.add(className$8('t'));
         this.element.appendChild(textElem);
         this.textElement = textElem;
     }
@@ -7249,7 +7249,7 @@ function waitToBeAddedToDom(elem, callback) {
     });
 }
 
-const className$6 = ClassName('cbzg');
+const className$7 = ClassName('cbzg');
 // TODO: Apply to core
 function compose(h1, h2) {
     return (input) => h2(h1(input));
@@ -7257,28 +7257,28 @@ function compose(h1, h2) {
 class CubicBezierGraphView {
     constructor(doc, config) {
         this.element = doc.createElement('div');
-        this.element.classList.add(className$6());
+        this.element.classList.add(className$7());
         config.viewProps.bindClassModifiers(this.element);
         config.viewProps.bindTabIndex(this.element);
         const previewElem = doc.createElement('div');
-        previewElem.classList.add(className$6('p'));
+        previewElem.classList.add(className$7('p'));
         this.element.appendChild(previewElem);
         this.previewElement = previewElem;
         const svgElem = doc.createElementNS(SVG_NS, 'svg');
-        svgElem.classList.add(className$6('g'));
+        svgElem.classList.add(className$7('g'));
         this.element.appendChild(svgElem);
         this.svgElem_ = svgElem;
         const guideElem = doc.createElementNS(SVG_NS, 'path');
-        guideElem.classList.add(className$6('u'));
+        guideElem.classList.add(className$7('u'));
         this.svgElem_.appendChild(guideElem);
         this.guideElem_ = guideElem;
         const lineElem = doc.createElementNS(SVG_NS, 'polyline');
-        lineElem.classList.add(className$6('l'));
+        lineElem.classList.add(className$7('l'));
         this.svgElem_.appendChild(lineElem);
         this.lineElem_ = lineElem;
         this.handleElems_ = [doc.createElement('div'), doc.createElement('div')];
         this.handleElems_.forEach((elem) => {
-            elem.classList.add(className$6('h'));
+            elem.classList.add(className$7('h'));
             this.element.appendChild(elem);
         });
         this.vectorElems_ = [
@@ -7286,14 +7286,14 @@ class CubicBezierGraphView {
             doc.createElementNS(SVG_NS, 'line'),
         ];
         this.vectorElems_.forEach((elem) => {
-            elem.classList.add(className$6('v'));
+            elem.classList.add(className$7('v'));
             this.svgElem_.appendChild(elem);
         });
         this.value_ = config.value;
         this.value_.emitter.on('change', this.onValueChange_.bind(this));
         this.sel_ = config.selection;
         this.handleElems_.forEach((elem, index) => {
-            bindValue(this.sel_, compose((selection) => selection === index, valueToClassName(elem, className$6('h', 'sel'))));
+            bindValue(this.sel_, compose((selection) => selection === index, valueToClassName(elem, className$7('h', 'sel'))));
         });
         waitToBeAddedToDom(this.element, () => {
             this.refresh();
@@ -7362,7 +7362,7 @@ class CubicBezierGraphView {
 const TICK_COUNT = 24;
 const PREVIEW_DELAY = 400;
 const PREVIEW_DURATION = 1000;
-const className$5 = ClassName('cbzprv');
+const className$6 = ClassName('cbzprv');
 class CubicBezierPreviewView {
     constructor(doc, config) {
         this.stopped_ = true;
@@ -7371,18 +7371,18 @@ class CubicBezierPreviewView {
         this.onTimer_ = this.onTimer_.bind(this);
         this.onValueChange_ = this.onValueChange_.bind(this);
         this.element = doc.createElement('div');
-        this.element.classList.add(className$5());
+        this.element.classList.add(className$6());
         config.viewProps.bindClassModifiers(this.element);
         const svgElem = doc.createElementNS(SVG_NS, 'svg');
-        svgElem.classList.add(className$5('g'));
+        svgElem.classList.add(className$6('g'));
         this.element.appendChild(svgElem);
         this.svgElem_ = svgElem;
         const ticksElem = doc.createElementNS(SVG_NS, 'path');
-        ticksElem.classList.add(className$5('t'));
+        ticksElem.classList.add(className$6('t'));
         this.svgElem_.appendChild(ticksElem);
         this.ticksElem_ = ticksElem;
         const markerElem = doc.createElement('div');
-        markerElem.classList.add(className$5('m'));
+        markerElem.classList.add(className$6('m'));
         this.element.appendChild(markerElem);
         this.markerElem_ = markerElem;
         this.value_ = config.value;
@@ -7395,14 +7395,14 @@ class CubicBezierPreviewView {
     play() {
         this.stop();
         this.updateMarker_(0);
-        this.markerElem_.classList.add(className$5('m', 'a'));
+        this.markerElem_.classList.add(className$6('m', 'a'));
         this.startTime_ = new Date().getTime() + PREVIEW_DELAY;
         this.stopped_ = false;
         requestAnimationFrame(this.onTimer_);
     }
     stop() {
         this.stopped_ = true;
-        this.markerElem_.classList.remove(className$5('m', 'a'));
+        this.markerElem_.classList.remove(className$6('m', 'a'));
     }
     onDispose_() {
         this.stop();
@@ -7861,25 +7861,25 @@ class Fpswatch {
     }
 }
 
-const className$4 = ClassName('fps');
+const className$5 = ClassName('fps');
 class FpsView {
     constructor(doc, config) {
         this.element = doc.createElement('div');
-        this.element.classList.add(className$4());
+        this.element.classList.add(className$5());
         config.viewProps.bindClassModifiers(this.element);
         this.graphElement = doc.createElement('div');
-        this.graphElement.classList.add(className$4('g'));
+        this.graphElement.classList.add(className$5('g'));
         this.element.appendChild(this.graphElement);
         const labelElement = doc.createElement('div');
-        labelElement.classList.add(className$4('l'));
+        labelElement.classList.add(className$5('l'));
         this.element.appendChild(labelElement);
         const valueElement = doc.createElement('span');
-        valueElement.classList.add(className$4('v'));
+        valueElement.classList.add(className$5('v'));
         valueElement.textContent = '--';
         labelElement.appendChild(valueElement);
         this.valueElement = valueElement;
         const unitElement = doc.createElement('span');
-        unitElement.classList.add(className$4('u'));
+        unitElement.classList.add(className$5('u'));
         unitElement.textContent = 'FPS';
         labelElement.appendChild(unitElement);
     }
@@ -7994,7 +7994,7 @@ const FpsGraphBladePlugin = createPlugin({
     },
 });
 
-class Interval {
+class Interval$1 {
     constructor(min, max) {
         this.min = min;
         this.max = max;
@@ -8023,66 +8023,66 @@ class Interval {
         };
     }
 }
-const IntervalAssembly = {
-    fromComponents: (comps) => new Interval(comps[0], comps[1]),
+const IntervalAssembly$1 = {
+    fromComponents: (comps) => new Interval$1(comps[0], comps[1]),
     toComponents: (p) => [p.min, p.max],
 };
 
-class IntervalConstraint {
+class IntervalConstraint$1 {
     constructor(edge) {
         this.edge = edge;
     }
     constrain(value) {
         var _a, _b, _c, _d, _e, _f, _g, _h;
         if (value.min <= value.max) {
-            return new Interval((_b = (_a = this.edge) === null || _a === void 0 ? void 0 : _a.constrain(value.min)) !== null && _b !== void 0 ? _b : value.min, (_d = (_c = this.edge) === null || _c === void 0 ? void 0 : _c.constrain(value.max)) !== null && _d !== void 0 ? _d : value.max);
+            return new Interval$1((_b = (_a = this.edge) === null || _a === void 0 ? void 0 : _a.constrain(value.min)) !== null && _b !== void 0 ? _b : value.min, (_d = (_c = this.edge) === null || _c === void 0 ? void 0 : _c.constrain(value.max)) !== null && _d !== void 0 ? _d : value.max);
         }
         const c = (value.min + value.max) / 2;
-        return new Interval((_f = (_e = this.edge) === null || _e === void 0 ? void 0 : _e.constrain(c)) !== null && _f !== void 0 ? _f : c, (_h = (_g = this.edge) === null || _g === void 0 ? void 0 : _g.constrain(c)) !== null && _h !== void 0 ? _h : c);
+        return new Interval$1((_f = (_e = this.edge) === null || _e === void 0 ? void 0 : _e.constrain(c)) !== null && _f !== void 0 ? _f : c, (_h = (_g = this.edge) === null || _g === void 0 ? void 0 : _g.constrain(c)) !== null && _h !== void 0 ? _h : c);
     }
 }
 
-const className$3 = ClassName('rsltxt');
-class RangeSliderTextView {
+const className$4 = ClassName('rsltxt');
+class RangeSliderTextView$1 {
     constructor(doc, config) {
         this.sliderView_ = config.sliderView;
         this.textView_ = config.textView;
         this.element = doc.createElement('div');
-        this.element.classList.add(className$3());
+        this.element.classList.add(className$4());
         const sliderElem = doc.createElement('div');
-        sliderElem.classList.add(className$3('s'));
+        sliderElem.classList.add(className$4('s'));
         sliderElem.appendChild(this.sliderView_.element);
         this.element.appendChild(sliderElem);
         const textElem = doc.createElement('div');
-        textElem.classList.add(className$3('t'));
+        textElem.classList.add(className$4('t'));
         textElem.appendChild(this.textView_.element);
         this.element.appendChild(textElem);
     }
 }
 
-const className$2 = ClassName('rsl');
-class RangeSliderView {
+const className$3 = ClassName('rsl');
+class RangeSliderView$1 {
     constructor(doc, config) {
         this.onSliderPropsChange_ = this.onSliderPropsChange_.bind(this);
         this.onValueChange_ = this.onValueChange_.bind(this);
         this.sliderProps_ = config.sliderProps;
         this.sliderProps_.emitter.on('change', this.onSliderPropsChange_);
         this.element = doc.createElement('div');
-        this.element.classList.add(className$2());
+        this.element.classList.add(className$3());
         config.viewProps.bindClassModifiers(this.element);
         this.value_ = config.value;
         this.value_.emitter.on('change', this.onValueChange_);
         const trackElem = doc.createElement('div');
-        trackElem.classList.add(className$2('t'));
+        trackElem.classList.add(className$3('t'));
         this.element.appendChild(trackElem);
         this.trackElement = trackElem;
         const barElem = doc.createElement('div');
-        barElem.classList.add(className$2('b'));
+        barElem.classList.add(className$3('b'));
         trackElem.appendChild(barElem);
         this.barElement = barElem;
         const knobElems = ['min', 'max'].map((modifier) => {
             const elem = doc.createElement('div');
-            elem.classList.add(className$2('k'), className$2('k', modifier));
+            elem.classList.add(className$3('k'), className$3('k', modifier));
             trackElem.appendChild(elem);
             return elem;
         });
@@ -8097,10 +8097,10 @@ class RangeSliderView {
     update_() {
         const v = this.value_.rawValue;
         if (v.length === 0) {
-            this.element.classList.add(className$2(undefined, 'zero'));
+            this.element.classList.add(className$3(undefined, 'zero'));
         }
         else {
-            this.element.classList.remove(className$2(undefined, 'zero'));
+            this.element.classList.remove(className$3(undefined, 'zero'));
         }
         const xs = [this.valueToX_(v.min), this.valueToX_(v.max)];
         this.barElement.style.left = `${xs[0]}%`;
@@ -8117,7 +8117,7 @@ class RangeSliderView {
     }
 }
 
-class RangeSliderController {
+class RangeSliderController$1 {
     constructor(doc, config) {
         this.grabbing_ = null;
         this.grabOffset_ = 0;
@@ -8127,7 +8127,7 @@ class RangeSliderController {
         this.sliderProps = config.sliderProps;
         this.viewProps = config.viewProps;
         this.value = config.value;
-        this.view = new RangeSliderView(doc, {
+        this.view = new RangeSliderView$1(doc, {
             sliderProps: this.sliderProps,
             value: this.value,
             viewProps: config.viewProps,
@@ -8192,10 +8192,10 @@ class RangeSliderController {
         const rmin = this.sliderProps.get('min');
         const rmax = this.sliderProps.get('max');
         if (this.grabbing_ === 'min') {
-            this.value.setRawValue(new Interval(v, this.value.rawValue.max), opts);
+            this.value.setRawValue(new Interval$1(v, this.value.rawValue.max), opts);
         }
         else if (this.grabbing_ === 'max') {
-            this.value.setRawValue(new Interval(this.value.rawValue.min, v), opts);
+            this.value.setRawValue(new Interval$1(this.value.rawValue.min, v), opts);
         }
         else if (this.grabbing_ === 'length') {
             const len = this.value.rawValue.length;
@@ -8209,7 +8209,7 @@ class RangeSliderController {
                 min = rmax - len;
                 max = rmax;
             }
-            this.value.setRawValue(new Interval(min, max), opts);
+            this.value.setRawValue(new Interval$1(min, max), opts);
         }
     }
     onPointerMove_(ev) {
@@ -8227,23 +8227,23 @@ class RangeSliderController {
     }
 }
 
-class RangeSliderTextController {
+class RangeSliderTextController$1 {
     constructor(doc, config) {
         this.value = config.value;
         this.viewProps = config.viewProps;
-        this.sc_ = new RangeSliderController(doc, config);
+        this.sc_ = new RangeSliderController$1(doc, config);
         const axis = {
             constraint: config.constraint,
             textProps: config.textProps,
         };
         this.tc_ = new PointNdTextController(doc, {
-            assembly: IntervalAssembly,
+            assembly: IntervalAssembly$1,
             axes: [axis, axis],
             parser: config.parser,
             value: this.value,
             viewProps: config.viewProps,
         });
-        this.view = new RangeSliderTextView(doc, {
+        this.view = new RangeSliderTextView$1(doc, {
             sliderView: this.sc_.view,
             textView: this.tc_.view,
         });
@@ -8253,12 +8253,12 @@ class RangeSliderTextController {
     }
 }
 
-function intervalFromUnknown(value) {
-    return Interval.isObject(value)
-        ? new Interval(value.min, value.max)
-        : new Interval(0, 0);
+function intervalFromUnknown$1(value) {
+    return Interval$1.isObject(value)
+        ? new Interval$1(value.min, value.max)
+        : new Interval$1(0, 0);
 }
-function writeInterval(target, value) {
+function writeInterval$1(target, value) {
     target.writeProperty('max', value.max);
     target.writeProperty('min', value.min);
 }
@@ -8273,40 +8273,40 @@ function createConstraint$1(params) {
     if (sc) {
         constraints.push(sc);
     }
-    return new IntervalConstraint(new CompositeConstraint(constraints));
+    return new IntervalConstraint$1(new CompositeConstraint(constraints));
 }
 const IntervalInputPlugin = createPlugin({
     id: 'input-interval',
     type: 'input',
     accept: (exValue, params) => {
-        if (!Interval.isObject(exValue)) {
+        if (!Interval$1.isObject(exValue)) {
             return null;
         }
         const result = parseRecord(params, (p) => (Object.assign(Object.assign({}, createNumberTextInputParamsParser(p)), { readonly: p.optional.constant(false) })));
         return result
             ? {
-                initialValue: new Interval(exValue.min, exValue.max),
+                initialValue: new Interval$1(exValue.min, exValue.max),
                 params: result,
             }
             : null;
     },
     binding: {
-        reader: (_args) => intervalFromUnknown,
+        reader: (_args) => intervalFromUnknown$1,
         constraint: (args) => createConstraint$1(args.params),
-        equals: Interval.equals,
-        writer: (_args) => writeInterval,
+        equals: Interval$1.equals,
+        writer: (_args) => writeInterval$1,
     },
     controller(args) {
         const v = args.value;
         const c = args.constraint;
-        if (!(c instanceof IntervalConstraint)) {
+        if (!(c instanceof IntervalConstraint$1)) {
             throw TpError.shouldNeverHappen();
         }
         const midValue = (v.rawValue.min + v.rawValue.max) / 2;
         const textProps = ValueMap.fromObject(createNumberTextPropsObject(args.params, midValue));
         const drc = c.edge && findConstraint(c.edge, DefiniteRangeConstraint);
         if (drc) {
-            return new RangeSliderTextController(args.document, {
+            return new RangeSliderTextController$1(args.document, {
                 constraint: c.edge,
                 parser: parseNumber,
                 sliderProps: new ValueMap({
@@ -8324,7 +8324,7 @@ const IntervalInputPlugin = createPlugin({
             textProps: textProps,
         };
         return new PointNdTextController(args.document, {
-            assembly: IntervalAssembly,
+            assembly: IntervalAssembly$1,
             axes: [axis, axis],
             parser: parseNumber,
             value: v,
@@ -8396,27 +8396,27 @@ class RadioGridApi extends BladeApi {
     }
 }
 
-const className$1 = ClassName('rad');
+const className$2 = ClassName('rad');
 class RadioView {
     constructor(doc, config) {
         this.element = doc.createElement('div');
-        this.element.classList.add(className$1());
+        this.element.classList.add(className$2());
         config.viewProps.bindClassModifiers(this.element);
         const labelElem = doc.createElement('label');
-        labelElem.classList.add(className$1('l'));
+        labelElem.classList.add(className$2('l'));
         this.element.appendChild(labelElem);
         const inputElem = doc.createElement('input');
-        inputElem.classList.add(className$1('i'));
+        inputElem.classList.add(className$2('i'));
         inputElem.name = config.name;
         inputElem.type = 'radio';
         config.viewProps.bindDisabled(inputElem);
         labelElem.appendChild(inputElem);
         this.inputElement = inputElem;
         const bodyElem = doc.createElement('div');
-        bodyElem.classList.add(className$1('b'));
+        bodyElem.classList.add(className$2('b'));
         labelElem.appendChild(bodyElem);
         const titleElem = doc.createElement('div');
-        titleElem.classList.add(className$1('t'));
+        titleElem.classList.add(className$2('t'));
         bodyElem.appendChild(titleElem);
         bindValueMap(config.props, 'title', (title) => {
             titleElem.textContent = title;
@@ -8596,112 +8596,273 @@ const RadioGruidBooleanInputPlugin = createRadioGridInputPlugin({
     },
 });
 
-// Create a class name generator from the view name
-// ClassName('tmp') will generate a CSS class name like `tp-tmpv`
-const className = ClassName('step');
-// Custom view class should implement `View` interface
-class StepperPluginView {
-    constructor(doc, config) {
-        // Create a root element for the plugin
-        this.element = doc.createElement('div');
-        this.element.classList.add(className());
-        // Bind view props to the element
-        config.viewProps.bindClassModifiers(this.element);
-        // Receive the bound value from the controller
-        this.value_ = config.value;
-        // Handle 'change' event of the value
-        this.value_.emitter.on('change', this.onValueChange_.bind(this));
-        // Create child elements
-        this.btnMinus = doc.createElement('button');
-        this.btnMinus.textContent = '-';
-        this.btnMinus.classList.add(className('b'));
-        this.element.appendChild(this.btnMinus);
-        this.btnPlus = doc.createElement('button');
-        this.btnPlus.textContent = '+';
-        this.btnPlus.classList.add(className('b'));
-        this.element.appendChild(this.btnPlus);
-        this.numInput = doc.createElement('input');
-        this.numInput.classList.add(className('i'));
-        this.element.appendChild(this.numInput);
-        // Apply the initial value
-        this.refresh_();
-        config.viewProps.handleDispose(() => {
-            // Called when the view is disposing
-            console.log('TODO: dispose view');
-        });
-    }
-    refresh_() {
-        this.value_.rawValue;
-    }
-    onValueChange_() {
-        this.refresh_();
-    }
-}
-
-// Custom controller class should implement `Controller` interface
-class StepperController {
-    constructor(doc, config) {
-        // Receive the bound value from the plugin
-        this.value = config.value;
-        // and also view props
-        this.viewProps = config.viewProps;
-        this.viewProps.handleDispose(() => {
-            // Called when the controller is disposing
-            console.log('TODO: dispose controller');
-        });
-        // Create a custom view
-        this.view = new StepperPluginView(doc, {
-            value: this.value,
-            viewProps: this.viewProps,
-        });
-        // Handle user interaction
-        // this.view.buttonElement.addEventListener('click', () => {
-        // 	// Update a model
-        // 	this.value.rawValue += 1;
-        // });
-    }
-}
-
-class Stepper {
-    constructor(val) {
-        this.val = val;
+class Interval {
+    constructor(min, max) {
+        this.min = min;
+        this.max = max;
     }
     static isObject(obj) {
         if (typeof obj !== 'object' || obj === null) {
             return false;
         }
-        const val = obj.val;
-        if (typeof val !== 'number') {
+        const min = obj.min;
+        const max = obj.max;
+        if (typeof min !== 'number' || typeof max !== 'number') {
             return false;
         }
         return true;
     }
-    get getValue() {
-        return this.val;
+    static equals(v1, v2) {
+        return v1.min === v2.min && v1.max === v2.max;
+    }
+    get length() {
+        return this.max - this.min;
     }
     toObject() {
         return {
-            val: this.val,
+            min: this.min,
+            max: this.max,
         };
     }
 }
+const IntervalAssembly = {
+    fromComponents: (comps) => new Interval(comps[0], comps[1]),
+    toComponents: (p) => [p.min, p.max],
+};
 
-function stepperFromUnknown(value) {
-    return Stepper.isObject(value)
-        ? new Stepper(value.val)
-        : new Stepper(0);
-}
-function writeStepper(target, value) {
-    target.writeProperty('val', value.val);
-}
-
-class StepperConstraint {
+class IntervalConstraint {
     constructor(edge) {
         this.edge = edge;
     }
     constrain(value) {
-        return value;
+        var _a, _b, _c, _d, _e, _f, _g, _h;
+        if (value.min <= value.max) {
+            return new Interval((_b = (_a = this.edge) === null || _a === void 0 ? void 0 : _a.constrain(value.min)) !== null && _b !== void 0 ? _b : value.min, (_d = (_c = this.edge) === null || _c === void 0 ? void 0 : _c.constrain(value.max)) !== null && _d !== void 0 ? _d : value.max);
+        }
+        const c = (value.min + value.max) / 2;
+        return new Interval((_f = (_e = this.edge) === null || _e === void 0 ? void 0 : _e.constrain(c)) !== null && _f !== void 0 ? _f : c, (_h = (_g = this.edge) === null || _g === void 0 ? void 0 : _g.constrain(c)) !== null && _h !== void 0 ? _h : c);
     }
+}
+
+const className$1 = ClassName('rsltxt');
+class RangeSliderTextView {
+    constructor(doc, config) {
+        this.sliderView_ = config.sliderView;
+        this.textView_ = config.textView;
+        this.element = doc.createElement('div');
+        this.element.classList.add(className$1());
+        const sliderElem = doc.createElement('div');
+        sliderElem.classList.add(className$1('s'));
+        sliderElem.appendChild(this.sliderView_.element);
+        this.element.appendChild(sliderElem);
+        const textElem = doc.createElement('div');
+        textElem.classList.add(className$1('t'));
+        textElem.appendChild(this.textView_.element);
+        this.element.appendChild(textElem);
+    }
+}
+
+const className = ClassName('rsl');
+class RangeSliderView {
+    constructor(doc, config) {
+        this.onSliderPropsChange_ = this.onSliderPropsChange_.bind(this);
+        this.onValueChange_ = this.onValueChange_.bind(this);
+        this.sliderProps_ = config.sliderProps;
+        this.sliderProps_.emitter.on('change', this.onSliderPropsChange_);
+        this.element = doc.createElement('div');
+        this.element.classList.add(className());
+        config.viewProps.bindClassModifiers(this.element);
+        this.value_ = config.value;
+        this.value_.emitter.on('change', this.onValueChange_);
+        const trackElem = doc.createElement('div');
+        trackElem.classList.add(className('t'));
+        this.element.appendChild(trackElem);
+        this.trackElement = trackElem;
+        const barElem = doc.createElement('div');
+        barElem.classList.add(className('b'));
+        trackElem.appendChild(barElem);
+        this.barElement = barElem;
+        const knobElems = ['min', 'max'].map((modifier) => {
+            const elem = doc.createElement('div');
+            elem.classList.add(className('k'), className('k', modifier));
+            trackElem.appendChild(elem);
+            return elem;
+        });
+        this.knobElements = [knobElems[0], knobElems[1]];
+        this.update_();
+    }
+    valueToX_(value) {
+        const min = this.sliderProps_.get('min');
+        const max = this.sliderProps_.get('max');
+        return constrainRange(mapRange(value, min, max, 0, 1), 0, 1) * 100;
+    }
+    update_() {
+        const v = this.value_.rawValue;
+        if (v.length === 0) {
+            this.element.classList.add(className(undefined, 'zero'));
+        }
+        else {
+            this.element.classList.remove(className(undefined, 'zero'));
+        }
+        const xs = [this.valueToX_(v.min), this.valueToX_(v.max)];
+        this.barElement.style.left = `${xs[0]}%`;
+        this.barElement.style.right = `${100 - xs[1]}%`;
+        this.knobElements.forEach((elem, index) => {
+            elem.style.left = `${xs[index]}%`;
+        });
+    }
+    onSliderPropsChange_() {
+        this.update_();
+    }
+    onValueChange_() {
+        this.update_();
+    }
+}
+
+class RangeSliderController {
+    constructor(doc, config) {
+        this.grabbing_ = null;
+        this.grabOffset_ = 0;
+        this.onPointerDown_ = this.onPointerDown_.bind(this);
+        this.onPointerMove_ = this.onPointerMove_.bind(this);
+        this.onPointerUp_ = this.onPointerUp_.bind(this);
+        this.sliderProps = config.sliderProps;
+        this.viewProps = config.viewProps;
+        this.value = config.value;
+        this.view = new RangeSliderView(doc, {
+            sliderProps: this.sliderProps,
+            value: this.value,
+            viewProps: config.viewProps,
+        });
+        const ptHandler = new PointerHandler(this.view.trackElement);
+        ptHandler.emitter.on('down', this.onPointerDown_);
+        ptHandler.emitter.on('move', this.onPointerMove_);
+        ptHandler.emitter.on('up', this.onPointerUp_);
+    }
+    ofs_() {
+        if (this.grabbing_ === 'min') {
+            return this.view.knobElements[0].getBoundingClientRect().width / 2;
+        }
+        if (this.grabbing_ === 'max') {
+            return -this.view.knobElements[1].getBoundingClientRect().width / 2;
+        }
+        return 0;
+    }
+    valueFromData_(data) {
+        if (!data.point) {
+            return null;
+        }
+        const p = (data.point.x + this.ofs_()) / data.bounds.width;
+        const min = this.sliderProps.get('min');
+        const max = this.sliderProps.get('max');
+        return mapRange(p, 0, 1, min, max);
+    }
+    onPointerDown_(ev) {
+        if (!ev.data.point) {
+            return;
+        }
+        const p = ev.data.point.x / ev.data.bounds.width;
+        const v = this.value.rawValue;
+        const min = this.sliderProps.get('min');
+        const max = this.sliderProps.get('max');
+        const pmin = mapRange(v.min, min, max, 0, 1);
+        const pmax = mapRange(v.max, min, max, 0, 1);
+        if (Math.abs(pmax - p) <= 0.025) {
+            this.grabbing_ = 'max';
+        }
+        else if (Math.abs(pmin - p) <= 0.025) {
+            this.grabbing_ = 'min';
+        }
+        else if (p >= pmin && p <= pmax) {
+            this.grabbing_ = 'length';
+            this.grabOffset_ = mapRange(p - pmin, 0, 1, 0, max - min);
+        }
+        else if (p < pmin) {
+            this.grabbing_ = 'min';
+            this.onPointerMove_(ev);
+        }
+        else if (p > pmax) {
+            this.grabbing_ = 'max';
+            this.onPointerMove_(ev);
+        }
+    }
+    applyPointToValue_(data, opts) {
+        const v = this.valueFromData_(data);
+        if (v === null) {
+            return;
+        }
+        const rmin = this.sliderProps.get('min');
+        const rmax = this.sliderProps.get('max');
+        if (this.grabbing_ === 'min') {
+            this.value.setRawValue(new Interval(v, this.value.rawValue.max), opts);
+        }
+        else if (this.grabbing_ === 'max') {
+            this.value.setRawValue(new Interval(this.value.rawValue.min, v), opts);
+        }
+        else if (this.grabbing_ === 'length') {
+            const len = this.value.rawValue.length;
+            let min = v - this.grabOffset_;
+            let max = min + len;
+            if (min < rmin) {
+                min = rmin;
+                max = rmin + len;
+            }
+            else if (max > rmax) {
+                min = rmax - len;
+                max = rmax;
+            }
+            this.value.setRawValue(new Interval(min, max), opts);
+        }
+    }
+    onPointerMove_(ev) {
+        this.applyPointToValue_(ev.data, {
+            forceEmit: false,
+            last: false,
+        });
+    }
+    onPointerUp_(ev) {
+        this.applyPointToValue_(ev.data, {
+            forceEmit: true,
+            last: true,
+        });
+        this.grabbing_ = null;
+    }
+}
+
+class RangeSliderTextController {
+    constructor(doc, config) {
+        this.value = config.value;
+        this.viewProps = config.viewProps;
+        this.sc_ = new RangeSliderController(doc, config);
+        const axis = {
+            constraint: config.constraint,
+            textProps: config.textProps,
+        };
+        this.tc_ = new PointNdTextController(doc, {
+            assembly: IntervalAssembly,
+            axes: [axis, axis],
+            parser: config.parser,
+            value: this.value,
+            viewProps: config.viewProps,
+        });
+        this.view = new RangeSliderTextView(doc, {
+            sliderView: this.sc_.view,
+            textView: this.tc_.view,
+        });
+    }
+    get textController() {
+        return this.tc_;
+    }
+}
+
+function intervalFromUnknown(value) {
+    return Interval.isObject(value)
+        ? new Interval(value.min, value.max)
+        : new Interval(0, 0);
+}
+function writeInterval(target, value) {
+    target.writeProperty('max', value.max);
+    target.writeProperty('min', value.min);
 }
 
 function createConstraint(params) {
@@ -8714,51 +8875,61 @@ function createConstraint(params) {
     if (sc) {
         constraints.push(sc);
     }
-    return new StepperConstraint(new CompositeConstraint(constraints));
+    return new IntervalConstraint(new CompositeConstraint(constraints));
 }
-// NOTE: JSDoc comments of `InputBindingPlugin` can be useful to know details about each property
-//
-// `InputBindingPlugin<In, Ex, P>` means...
-// - The plugin receives the bound value as `Ex`,
-// - converts `Ex` into `In` and holds it
-// - P is the type of the parsed parameters
-//
 const StepperInputPlugin = createPlugin({
-    id: 'input-stepper',
+    id: 'input-interval',
     type: 'input',
-    accept(exValue, params) {
-        if (!Stepper.isObject(exValue)) {
+    accept: (exValue, params) => {
+        if (!Interval.isObject(exValue)) {
             return null;
         }
-        // Parse parameters object
-        const result = parseRecord(params, (p) => {
-            var _a;
-            return ({
-                // `view` option may be useful to provide a custom control for primitive values
-                view: p.required.constant('stepper'),
-                max: p.optional.number,
-                min: p.optional.number,
-                step: (_a = p.optional.number) !== null && _a !== void 0 ? _a : 1,
-            });
-        });
-        if (!result) {
-            return null;
-        }
-        // Return a typed value and params to accept the user input
-        return {
-            initialValue: exValue,
-            params: result,
-        };
+        const result = parseRecord(params, (p) => (Object.assign(Object.assign({}, createNumberTextInputParamsParser(p)), { readonly: p.optional.constant(false) })));
+        return result
+            ? {
+                initialValue: new Interval(exValue.min, exValue.max),
+                params: result,
+            }
+            : null;
     },
     binding: {
-        reader: (_args) => stepperFromUnknown,
+        reader: (_args) => intervalFromUnknown,
         constraint: (args) => createConstraint(args.params),
-        writer: (_args) => writeStepper,
+        equals: Interval.equals,
+        writer: (_args) => writeInterval,
     },
     controller(args) {
-        // Create a controller for the plugin
-        return new StepperController(args.document, {
-            value: args.value,
+        const v = args.value;
+        const c = args.constraint;
+        if (!(c instanceof IntervalConstraint)) {
+            throw TpError.shouldNeverHappen();
+        }
+        const midValue = (v.rawValue.min + v.rawValue.max) / 2;
+        const textProps = ValueMap.fromObject(createNumberTextPropsObject(args.params, midValue));
+        const drc = c.edge && findConstraint(c.edge, DefiniteRangeConstraint);
+        if (drc) {
+            return new RangeSliderTextController(args.document, {
+                constraint: c.edge,
+                parser: parseNumber,
+                sliderProps: new ValueMap({
+                    keyScale: textProps.value('keyScale'),
+                    max: drc.values.value('max'),
+                    min: drc.values.value('min'),
+                }),
+                textProps: textProps,
+                value: v,
+                viewProps: args.viewProps,
+            });
+        }
+        const axis = {
+            constraint: c.edge,
+            textProps: textProps,
+        };
+        return new PointNdTextController(args.document, {
+            assembly: IntervalAssembly,
+            axes: [axis, axis],
+            parser: parseNumber,
+            value: v,
             viewProps: args.viewProps,
         });
     },
@@ -8778,4 +8949,4 @@ const plugins = [
     StepperInputPlugin,
 ];
 
-export { ButtonCellApi, ButtonGridApi, ButtonGridController, CubicBezier, CubicBezierApi, CubicBezierAssembly, CubicBezierController, CubicBezierGraphController, CubicBezierGraphView, CubicBezierPickerController, CubicBezierPickerView, CubicBezierPreviewView, CubicBezierView, FpsGraphBladeApi, FpsGraphController, FpsView, Fpswatch, Interval, IntervalAssembly, IntervalConstraint, RadioCellApi, RadioController, RadioGridApi, RadioGridController, RadioView, RangeSliderController, RangeSliderTextController, RangeSliderTextView, RangeSliderView, TpRadioGridChangeEvent, css, id, plugins };
+export { ButtonCellApi, ButtonGridApi, ButtonGridController, CubicBezier, CubicBezierApi, CubicBezierAssembly, CubicBezierController, CubicBezierGraphController, CubicBezierGraphView, CubicBezierPickerController, CubicBezierPickerView, CubicBezierPreviewView, CubicBezierView, FpsGraphBladeApi, FpsGraphController, FpsView, Fpswatch, Interval$1 as Interval, IntervalAssembly$1 as IntervalAssembly, IntervalConstraint$1 as IntervalConstraint, RadioCellApi, RadioController, RadioGridApi, RadioGridController, RadioView, RangeSliderController$1 as RangeSliderController, RangeSliderTextController$1 as RangeSliderTextController, RangeSliderTextView$1 as RangeSliderTextView, RangeSliderView$1 as RangeSliderView, TpRadioGridChangeEvent, css, id, plugins };

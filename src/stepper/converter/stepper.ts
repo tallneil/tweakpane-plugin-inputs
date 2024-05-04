@@ -1,12 +1,14 @@
 import {BindingTarget} from '@tweakpane/core';
-import {Stepper} from '../model/stepper.js';
 
-export function stepperFromUnknown(value: unknown): Stepper {
-	return Stepper.isObject(value)
-		? new Stepper(value.val)
-		: new Stepper(0);
+import {Interval} from '../model/stepper.js';
+
+export function intervalFromUnknown(value: unknown): Interval {
+	return Interval.isObject(value)
+		? new Interval(value.min, value.max)
+		: new Interval(0, 0);
 }
 
-export function writeStepper(target: BindingTarget, value: Stepper): void {
-	target.writeProperty('val', value.val);
+export function writeInterval(target: BindingTarget, value: Interval): void {
+	target.writeProperty('max', value.max);
+	target.writeProperty('min', value.min);
 }
