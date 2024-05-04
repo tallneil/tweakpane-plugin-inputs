@@ -8895,13 +8895,26 @@ class StepperTextController {
     }
 }
 
-function stepperFromUnknown(value) {
-    return Stepper.isObject(value)
-        ? new Stepper(value.val)
+// reader
+function stepperFromUnknown(exValue) {
+    // Convert an external unknown value into the internal value
+    console.log(Stepper.isObject(exValue)
+        ? exValue.val
+        : 0);
+    return Stepper.isObject(exValue)
+        ? new Stepper(exValue.val)
         : new Stepper(0);
+    // return (exValue: unknown): number => {
+    // 	// Convert an external unknown value into the internal value
+    // 	return typeof exValue === 'number' ? exValue : 0;
+    // };
 }
-function writeStepper(target, value) {
-    target.writeProperty('val', value.val);
+// writer
+function writeStepper(target, inValue) {
+    // 	Use `target.write()` to write the primitive value to the target,
+    // 	or `target.writeProperty()` to write a property of the target
+    target.write(inValue);
+    // target.writeProperty('val', inValue.val);
 }
 
 class StepperConstraint {
