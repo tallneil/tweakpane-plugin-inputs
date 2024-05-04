@@ -52,7 +52,6 @@ export const IntervalInputPlugin: InputBindingPlugin<
 		if (!Interval.isObject(exValue)) {
 			return null;
 		}
-		console.log(exValue);
 
 		const result = parseRecord<IntervalInputParams>(params, (p) => ({
 			...createNumberTextInputParamsParser(p),

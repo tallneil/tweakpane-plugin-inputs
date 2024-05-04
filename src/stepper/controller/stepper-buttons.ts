@@ -24,22 +24,18 @@ export class StepperButtonsController implements ValueController<Stepper, Steppe
 			value: this.value,
 			viewProps: config.viewProps,
 		});
+		
+		this.view.btnMinus.addEventListener('click', () => {
+			const v = this.value.rawValue.val ?? 0;
+			const step = 1; // fill this out 
+			const nv = v - step;
+			this.value.setRawValue(new Stepper(nv));
+		});
 
-		this.view.btnMinus.addEventListener('click', this.decrementValue_);
-		this.view.btnPlus.addEventListener('click', this.incrementValue_);
-	}
-
-	private decrementValue_(): void {
-		const v = this.value.rawValue.val ?? 0;
-		const step = 1; // fill this out 
-		this.value.setRawValue(new Stepper(v + step));
-
-		// where is min and max handled?
-	}
-
-	private incrementValue_(): void {
-		const v = this.value.rawValue.val ?? 0;
-		const step = 1; // fill this out 
-		this.value.setRawValue(new Stepper(v + step));
+		this.view.btnMinus.addEventListener('click', () => {
+			const v = this.value.rawValue.val ?? 0;
+			const step = 1; // fill this out 
+			this.value.setRawValue(new Stepper(v + step));
+		});
 	}
 }

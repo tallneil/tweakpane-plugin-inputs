@@ -4,6 +4,11 @@
 	@extend %tp-input;
 	display: flex;
 	gap: tp.cssVar('container-h-padding');
+	background: none;
+
+	&:hover, &:active {
+		background: none;
+	}
 
 	&.#{tp.$prefix}-v-disabled {
 		opacity: 0.5;
