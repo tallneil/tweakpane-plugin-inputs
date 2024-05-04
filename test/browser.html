@@ -3,6 +3,11 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Tweakpane plugin</title>
+	<style>
+		body {
+			background: black;
+		}
+	</style>
 </head>
 <body>
 	<script type="module">
@@ -12,9 +17,9 @@
 		const params = {
 			rangeStepInput: 2,
 			numberStepInput: 2,
-			stepper: 2,
-			interval: {min: 40, max: 60},
 			radiogrid: 25,
+			interval: {min: -10, max: 10},
+			stepper: 5,
 		};
 
 		const pane = new Pane();
@@ -28,11 +33,6 @@
 		pane.addBinding(params, 'numberStepInput', {
 			min: -10,
 			step: 1,
-		});
-		pane.addBinding(params, 'interval', {
-			format: (v) => v.toFixed(1),
-			min: 20,
-			max: 80,
 		});
 
 		const scales = [10, 20, 25, 50, 75, 100];
@@ -91,6 +91,11 @@
 			console.log(ev);
 		});
 
+		pane.addBinding(params, 'interval', {
+			format: (v) => v.toFixed(1),
+			min: -20,
+			max: 20,
+		});
 
 		pane.addBinding(params, 'stepper', {
 			view: 'stepper',
@@ -118,8 +123,6 @@
 		// 		});
 		// 	});
 		// }
-
-
 
 	</script>
 </body>

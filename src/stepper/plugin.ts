@@ -1,112 +1,69 @@
 import {
 	BaseInputParams,
-	CompositeConstraint,
-	Constraint,
 	createNumberTextInputParamsParser,
 	createNumberTextPropsObject,
 	createPlugin,
-	createRangeConstraint,
-	createStepConstraint,
-	DefiniteRangeConstraint,
-	findConstraint,
 	InputBindingPlugin,
 	NumberInputParams,
 	parseNumber,
 	parseRecord,
-	PointAxis,
-	PointNdTextController,
-	TpError,
 	ValueMap,
 } from '@tweakpane/core';
 
-import {IntervalConstraint} from './constraint/stepper.js';
-import {RangeSliderTextController} from './controller/stepper-text.js';
-import {intervalFromUnknown, writeInterval} from './converter/stepper.js';
-import {Interval, IntervalAssembly, IntervalObject} from './model/stepper.js';
+import {StepperTextController} from './controller/stepper-text.js';
+import {stepperFromUnknown, writeStepper} from './converter/stepper.js';
+import {Stepper, StepperAssembly, StepperObject} from './model/stepper.js';
 
-interface IntervalInputParams extends NumberInputParams, BaseInputParams {}
-
-function createConstraint(params: IntervalInputParams): Constraint<Interval> {
-	const constraints = [];
-	const rc = createRangeConstraint(params);
-	if (rc) {
-		constraints.push(rc);
-	}
-	const sc = createStepConstraint(params);
-	if (sc) {
-		constraints.push(sc);
-	}
-
-	return new IntervalConstraint(new CompositeConstraint(constraints));
-}
+interface StepperInputParams extends NumberInputParams, BaseInputParams {}
 
 export const StepperInputPlugin: InputBindingPlugin<
-	Interval,
-	IntervalObject,
-	IntervalInputParams
+	Stepper,
+	StepperObject,
+	StepperInputParams
 > = createPlugin({
-	id: 'input-interval',
+	id: 'input-stepper',
 	type: 'input',
 
 	accept: (exValue, params) => {
-		if (!Interval.isObject(exValue)) {
+		if (!Stepper.isObject(exValue)) {
 			return null;
 		}
 
-		const result = parseRecord<IntervalInputParams>(params, (p) => ({
+		const result = parseRecord<StepperInputParams>(params, (p) => ({
 			...createNumberTextInputParamsParser(p),
 			readonly: p.optional.constant(false),
 		}));
-		return result
-			? {
-					initialValue: new Interval(exValue.min, exValue.max),
-					params: result,
-			  }
-			: null;
+		return result? {
+			initialValue: new Stepper(exValue.val),
+			params: result,
+		} : null;
 	},
 	binding: {
-		reader: (_args) => intervalFromUnknown,
-		constraint: (args) => createConstraint(args.params),
-		equals: Interval.equals,
-		writer: (_args) => writeInterval,
+		reader: (_args) => stepperFromUnknown,
+		writer: (_args) => writeStepper,
 	},
 	controller(args) {
 		const v = args.value;
-		const c = args.constraint;
-		if (!(c instanceof IntervalConstraint)) {
-			throw TpError.shouldNeverHappen();
-		}
-
-		const midValue = (v.rawValue.min + v.rawValue.max) / 2;
 		const textProps = ValueMap.fromObject(
-			createNumberTextPropsObject(args.params, midValue),
+			createNumberTextPropsObject(args.params, v.rawValue.val),
 		);
-		const drc = c.edge && findConstraint(c.edge, DefiniteRangeConstraint);
-		if (drc) {
-			return new RangeSliderTextController(args.document, {
-				constraint: c.edge,
-				parser: parseNumber,
-				sliderProps: new ValueMap({
-					keyScale: textProps.value('keyScale'),
-					max: drc.values.value('max'),
-					min: drc.values.value('min'),
-				}),
-				textProps: textProps,
-				value: v,
-				viewProps: args.viewProps,
-			});
-		}
-
-		const axis = {
-			constraint: c.edge,
-			textProps: textProps,
-		} as PointAxis;
-		return new PointNdTextController(args.document, {
-			assembly: IntervalAssembly,
-			axes: [axis, axis],
+		return new StepperTextController(args.document, {
 			parser: parseNumber,
+			textProps: textProps,
 			value: v,
 			viewProps: args.viewProps,
 		});
+
+		// const axis = {
+		// 	textProps: textProps,
+		// } as PointAxis;
+
+		// return new PointNdTextController(args.document, {
+		// 	assembly: StepperAssembly,
+		// 	axes: [axis], // axes: [axis, axis],
+		// 	parser: parseNumber,
+		// 	value: v,
+		// 	viewProps: args.viewProps,
+		// });
 	},
 });

@@ -3650,7 +3650,7 @@ class CheckboxController {
     }
 }
 
-function createConstraint$9(params) {
+function createConstraint$8(params) {
     const constraints = [];
     const lc = createListConstraint(params.options);
     if (lc) {
@@ -3678,7 +3678,7 @@ createPlugin({
     },
     binding: {
         reader: (_args) => boolFromUnknown,
-        constraint: (args) => createConstraint$9(args.params),
+        constraint: (args) => createConstraint$8(args.params),
         writer: (_args) => writePrimitive,
     },
     controller: (args) => {
@@ -4761,7 +4761,7 @@ class ColorTextsView {
 function createFormatter$2(type) {
     return createNumberFormatter(type === 'float' ? 2 : 0);
 }
-function createConstraint$8(mode, type, index) {
+function createConstraint$7(mode, type, index) {
     const max = getColorMaxComponents(mode, type)[index];
     return new DefiniteRangeConstraint({
         min: 0,
@@ -4778,7 +4778,7 @@ function createComponentController(doc, config, index) {
             pointerScale: config.colorType === 'float' ? 0.01 : 1,
         }),
         value: createValue(0, {
-            constraint: createConstraint$8(config.colorMode, config.colorType, index),
+            constraint: createConstraint$7(config.colorMode, config.colorType, index),
         }),
         viewProps: config.viewProps,
     });
@@ -5702,7 +5702,7 @@ class SliderInputBindingApi extends BindingApi {
     }
 }
 
-function createConstraint$7(params, initialValue) {
+function createConstraint$6(params, initialValue) {
     const constraints = [];
     const sc = createStepConstraint(params, initialValue);
     if (sc) {
@@ -5735,7 +5735,7 @@ createPlugin({
     },
     binding: {
         reader: (_args) => numberFromUnknown,
-        constraint: (args) => createConstraint$7(args.params, args.initialValue),
+        constraint: (args) => createConstraint$6(args.params, args.initialValue),
         writer: (_args) => writePrimitive,
     },
     controller: (args) => {
@@ -6121,7 +6121,7 @@ function writePoint2d(target, value) {
     target.writeProperty('y', value.y);
 }
 
-function createConstraint$6(params, initialValue) {
+function createConstraint$5(params, initialValue) {
     return new PointNdConstraint({
         assembly: Point2dAssembly,
         components: [
@@ -6171,7 +6171,7 @@ createPlugin({
     },
     binding: {
         reader: () => point2dFromUnknown,
-        constraint: (args) => createConstraint$6(args.params, args.initialValue),
+        constraint: (args) => createConstraint$5(args.params, args.initialValue),
         equals: Point2d.equals,
         writer: () => writePoint2d,
     },
@@ -6251,7 +6251,7 @@ function writePoint3d(target, value) {
     target.writeProperty('z', value.z);
 }
 
-function createConstraint$5(params, initialValue) {
+function createConstraint$4(params, initialValue) {
     return new PointNdConstraint({
         assembly: Point3dAssembly,
         components: [
@@ -6278,7 +6278,7 @@ createPlugin({
     },
     binding: {
         reader: (_args) => point3dFromUnknown,
-        constraint: (args) => createConstraint$5(args.params, args.initialValue),
+        constraint: (args) => createConstraint$4(args.params, args.initialValue),
         equals: Point3d.equals,
         writer: (_args) => writePoint3d,
     },
@@ -6358,7 +6358,7 @@ function writePoint4d(target, value) {
     target.writeProperty('w', value.w);
 }
 
-function createConstraint$4(params, initialValue) {
+function createConstraint$3(params, initialValue) {
     return new PointNdConstraint({
         assembly: Point4dAssembly,
         components: [
@@ -6386,7 +6386,7 @@ createPlugin({
     },
     binding: {
         reader: (_args) => point4dFromUnknown,
-        constraint: (args) => createConstraint$4(args.params, args.initialValue),
+        constraint: (args) => createConstraint$3(args.params, args.initialValue),
         equals: Point4d.equals,
         writer: (_args) => writePoint4d,
     },
@@ -6416,7 +6416,7 @@ createPlugin({
     },
 });
 
-function createConstraint$3(params) {
+function createConstraint$2(params) {
     const constraints = [];
     const lc = createListConstraint(params.options);
     if (lc) {
@@ -6444,7 +6444,7 @@ createPlugin({
     },
     binding: {
         reader: (_args) => stringFromUnknown,
-        constraint: (args) => createConstraint$3(args.params),
+        constraint: (args) => createConstraint$2(args.params),
         writer: (_args) => writePrimitive,
     },
     controller: (args) => {
@@ -7709,7 +7709,7 @@ class CubicBezierController {
     }
 }
 
-function createConstraint$2() {
+function createConstraint$1() {
     return new PointNdConstraint({
         assembly: CubicBezierAssembly,
         components: [0, 1, 2, 3].map((index) => index % 2 === 0
@@ -7739,7 +7739,7 @@ const CubicBezierBladePlugin = createPlugin({
         var _a, _b;
         const rv = new CubicBezier(...args.params.value);
         const v = createValue(rv, {
-            constraint: createConstraint$2(),
+            constraint: createConstraint$1(),
             equals: CubicBezier.equals,
         });
         const vc = new CubicBezierController(args.document, {
@@ -7994,7 +7994,7 @@ const FpsGraphBladePlugin = createPlugin({
     },
 });
 
-class Interval$1 {
+class Interval {
     constructor(min, max) {
         this.min = min;
         this.max = max;
@@ -8023,27 +8023,27 @@ class Interval$1 {
         };
     }
 }
-const IntervalAssembly$1 = {
-    fromComponents: (comps) => new Interval$1(comps[0], comps[1]),
+const IntervalAssembly = {
+    fromComponents: (comps) => new Interval(comps[0], comps[1]),
     toComponents: (p) => [p.min, p.max],
 };
 
-class IntervalConstraint$1 {
+class IntervalConstraint {
     constructor(edge) {
         this.edge = edge;
     }
     constrain(value) {
         var _a, _b, _c, _d, _e, _f, _g, _h;
         if (value.min <= value.max) {
-            return new Interval$1((_b = (_a = this.edge) === null || _a === void 0 ? void 0 : _a.constrain(value.min)) !== null && _b !== void 0 ? _b : value.min, (_d = (_c = this.edge) === null || _c === void 0 ? void 0 : _c.constrain(value.max)) !== null && _d !== void 0 ? _d : value.max);
+            return new Interval((_b = (_a = this.edge) === null || _a === void 0 ? void 0 : _a.constrain(value.min)) !== null && _b !== void 0 ? _b : value.min, (_d = (_c = this.edge) === null || _c === void 0 ? void 0 : _c.constrain(value.max)) !== null && _d !== void 0 ? _d : value.max);
         }
         const c = (value.min + value.max) / 2;
-        return new Interval$1((_f = (_e = this.edge) === null || _e === void 0 ? void 0 : _e.constrain(c)) !== null && _f !== void 0 ? _f : c, (_h = (_g = this.edge) === null || _g === void 0 ? void 0 : _g.constrain(c)) !== null && _h !== void 0 ? _h : c);
+        return new Interval((_f = (_e = this.edge) === null || _e === void 0 ? void 0 : _e.constrain(c)) !== null && _f !== void 0 ? _f : c, (_h = (_g = this.edge) === null || _g === void 0 ? void 0 : _g.constrain(c)) !== null && _h !== void 0 ? _h : c);
     }
 }
 
 const className$4 = ClassName('rsltxt');
-class RangeSliderTextView$1 {
+class RangeSliderTextView {
     constructor(doc, config) {
         this.sliderView_ = config.sliderView;
         this.textView_ = config.textView;
@@ -8061,7 +8061,7 @@ class RangeSliderTextView$1 {
 }
 
 const className$3 = ClassName('rsl');
-class RangeSliderView$1 {
+class RangeSliderView {
     constructor(doc, config) {
         this.onSliderPropsChange_ = this.onSliderPropsChange_.bind(this);
         this.onValueChange_ = this.onValueChange_.bind(this);
@@ -8117,7 +8117,7 @@ class RangeSliderView$1 {
     }
 }
 
-class RangeSliderController$1 {
+class RangeSliderController {
     constructor(doc, config) {
         this.grabbing_ = null;
         this.grabOffset_ = 0;
@@ -8127,7 +8127,7 @@ class RangeSliderController$1 {
         this.sliderProps = config.sliderProps;
         this.viewProps = config.viewProps;
         this.value = config.value;
-        this.view = new RangeSliderView$1(doc, {
+        this.view = new RangeSliderView(doc, {
             sliderProps: this.sliderProps,
             value: this.value,
             viewProps: config.viewProps,
@@ -8192,10 +8192,10 @@ class RangeSliderController$1 {
         const rmin = this.sliderProps.get('min');
         const rmax = this.sliderProps.get('max');
         if (this.grabbing_ === 'min') {
-            this.value.setRawValue(new Interval$1(v, this.value.rawValue.max), opts);
+            this.value.setRawValue(new Interval(v, this.value.rawValue.max), opts);
         }
         else if (this.grabbing_ === 'max') {
-            this.value.setRawValue(new Interval$1(this.value.rawValue.min, v), opts);
+            this.value.setRawValue(new Interval(this.value.rawValue.min, v), opts);
         }
         else if (this.grabbing_ === 'length') {
             const len = this.value.rawValue.length;
@@ -8209,7 +8209,7 @@ class RangeSliderController$1 {
                 min = rmax - len;
                 max = rmax;
             }
-            this.value.setRawValue(new Interval$1(min, max), opts);
+            this.value.setRawValue(new Interval(min, max), opts);
         }
     }
     onPointerMove_(ev) {
@@ -8227,23 +8227,23 @@ class RangeSliderController$1 {
     }
 }
 
-class RangeSliderTextController$1 {
+class RangeSliderTextController {
     constructor(doc, config) {
         this.value = config.value;
         this.viewProps = config.viewProps;
-        this.sc_ = new RangeSliderController$1(doc, config);
+        this.sc_ = new RangeSliderController(doc, config);
         const axis = {
             constraint: config.constraint,
             textProps: config.textProps,
         };
         this.tc_ = new PointNdTextController(doc, {
-            assembly: IntervalAssembly$1,
+            assembly: IntervalAssembly,
             axes: [axis, axis],
             parser: config.parser,
             value: this.value,
             viewProps: config.viewProps,
         });
-        this.view = new RangeSliderTextView$1(doc, {
+        this.view = new RangeSliderTextView(doc, {
             sliderView: this.sc_.view,
             textView: this.tc_.view,
         });
@@ -8253,17 +8253,17 @@ class RangeSliderTextController$1 {
     }
 }
 
-function intervalFromUnknown$1(value) {
-    return Interval$1.isObject(value)
-        ? new Interval$1(value.min, value.max)
-        : new Interval$1(0, 0);
+function intervalFromUnknown(value) {
+    return Interval.isObject(value)
+        ? new Interval(value.min, value.max)
+        : new Interval(0, 0);
 }
-function writeInterval$1(target, value) {
+function writeInterval(target, value) {
     target.writeProperty('max', value.max);
     target.writeProperty('min', value.min);
 }
 
-function createConstraint$1(params) {
+function createConstraint(params) {
     const constraints = [];
     const rc = createRangeConstraint(params);
     if (rc) {
@@ -8273,40 +8273,40 @@ function createConstraint$1(params) {
     if (sc) {
         constraints.push(sc);
     }
-    return new IntervalConstraint$1(new CompositeConstraint(constraints));
+    return new IntervalConstraint(new CompositeConstraint(constraints));
 }
 const IntervalInputPlugin = createPlugin({
     id: 'input-interval',
     type: 'input',
     accept: (exValue, params) => {
-        if (!Interval$1.isObject(exValue)) {
+        if (!Interval.isObject(exValue)) {
             return null;
         }
         const result = parseRecord(params, (p) => (Object.assign(Object.assign({}, createNumberTextInputParamsParser(p)), { readonly: p.optional.constant(false) })));
         return result
             ? {
-                initialValue: new Interval$1(exValue.min, exValue.max),
+                initialValue: new Interval(exValue.min, exValue.max),
                 params: result,
             }
             : null;
     },
     binding: {
-        reader: (_args) => intervalFromUnknown$1,
-        constraint: (args) => createConstraint$1(args.params),
-        equals: Interval$1.equals,
-        writer: (_args) => writeInterval$1,
+        reader: (_args) => intervalFromUnknown,
+        constraint: (args) => createConstraint(args.params),
+        equals: Interval.equals,
+        writer: (_args) => writeInterval,
     },
     controller(args) {
         const v = args.value;
         const c = args.constraint;
-        if (!(c instanceof IntervalConstraint$1)) {
+        if (!(c instanceof IntervalConstraint)) {
             throw TpError.shouldNeverHappen();
         }
         const midValue = (v.rawValue.min + v.rawValue.max) / 2;
         const textProps = ValueMap.fromObject(createNumberTextPropsObject(args.params, midValue));
         const drc = c.edge && findConstraint(c.edge, DefiniteRangeConstraint);
         if (drc) {
-            return new RangeSliderTextController$1(args.document, {
+            return new RangeSliderTextController(args.document, {
                 constraint: c.edge,
                 parser: parseNumber,
                 sliderProps: new ValueMap({
@@ -8324,7 +8324,7 @@ const IntervalInputPlugin = createPlugin({
             textProps: textProps,
         };
         return new PointNdTextController(args.document, {
-            assembly: IntervalAssembly$1,
+            assembly: IntervalAssembly,
             axes: [axis, axis],
             parser: parseNumber,
             value: v,
@@ -8596,65 +8596,43 @@ const RadioGruidBooleanInputPlugin = createRadioGridInputPlugin({
     },
 });
 
-class Interval {
-    constructor(min, max) {
-        this.min = min;
-        this.max = max;
+class Stepper {
+    constructor(val) {
+        this.val = val;
     }
     static isObject(obj) {
         if (typeof obj !== 'object' || obj === null) {
             return false;
         }
-        const min = obj.min;
-        const max = obj.max;
-        if (typeof min !== 'number' || typeof max !== 'number') {
+        const val = obj.val;
+        if (typeof val !== 'number') {
             return false;
         }
         return true;
     }
-    static equals(v1, v2) {
-        return v1.min === v2.min && v1.max === v2.max;
-    }
-    get length() {
-        return this.max - this.min;
-    }
     toObject() {
         return {
-            min: this.min,
-            max: this.max,
+            val: this.val,
         };
     }
 }
-const IntervalAssembly = {
-    fromComponents: (comps) => new Interval(comps[0], comps[1]),
-    toComponents: (p) => [p.min, p.max],
+const StepperAssembly = {
+    fromComponents: (comps) => new Stepper(comps[0]),
+    toComponents: (p) => [p.val],
 };
 
-class IntervalConstraint {
-    constructor(edge) {
-        this.edge = edge;
-    }
-    constrain(value) {
-        var _a, _b, _c, _d, _e, _f, _g, _h;
-        if (value.min <= value.max) {
-            return new Interval((_b = (_a = this.edge) === null || _a === void 0 ? void 0 : _a.constrain(value.min)) !== null && _b !== void 0 ? _b : value.min, (_d = (_c = this.edge) === null || _c === void 0 ? void 0 : _c.constrain(value.max)) !== null && _d !== void 0 ? _d : value.max);
-        }
-        const c = (value.min + value.max) / 2;
-        return new Interval((_f = (_e = this.edge) === null || _e === void 0 ? void 0 : _e.constrain(c)) !== null && _f !== void 0 ? _f : c, (_h = (_g = this.edge) === null || _g === void 0 ? void 0 : _g.constrain(c)) !== null && _h !== void 0 ? _h : c);
-    }
-}
-
-const className$1 = ClassName('rsltxt');
-class RangeSliderTextView {
+const className$1 = ClassName('step'); // 'steptxt' if you want a separate classname
+class StepperTextView {
     constructor(doc, config) {
-        this.sliderView_ = config.sliderView;
+        this.buttonsView_ = config.buttonsView;
         this.textView_ = config.textView;
         this.element = doc.createElement('div');
         this.element.classList.add(className$1());
-        const sliderElem = doc.createElement('div');
-        sliderElem.classList.add(className$1('s'));
-        sliderElem.appendChild(this.sliderView_.element);
-        this.element.appendChild(sliderElem);
+        const buttonsElem = doc.createElement('div');
+        // not sure why s and t. maybe should be left and right, or not at all
+        buttonsElem.classList.add(className$1('s'));
+        buttonsElem.appendChild(this.buttonsView_.element);
+        this.element.appendChild(buttonsElem);
         const textElem = doc.createElement('div');
         textElem.classList.add(className$1('t'));
         textElem.appendChild(this.textView_.element);
@@ -8662,191 +8640,80 @@ class RangeSliderTextView {
     }
 }
 
-const className = ClassName('rsl');
-class RangeSliderView {
+const className = ClassName('step');
+class StepperButtonsView {
+    // private readonly value_: Value<Stepper>;
     constructor(doc, config) {
-        this.onSliderPropsChange_ = this.onSliderPropsChange_.bind(this);
-        this.onValueChange_ = this.onValueChange_.bind(this);
-        this.sliderProps_ = config.sliderProps;
-        this.sliderProps_.emitter.on('change', this.onSliderPropsChange_);
+        // this.onButtonPropsChange_ = this.onButtonPropsChange_.bind(this);
+        // this.onValueChange_ = this.onValueChange_.bind(this);
+        // this.buttonProps_ = config.buttonProps;
         this.element = doc.createElement('div');
         this.element.classList.add(className());
         config.viewProps.bindClassModifiers(this.element);
-        this.value_ = config.value;
-        this.value_.emitter.on('change', this.onValueChange_);
-        const trackElem = doc.createElement('div');
-        trackElem.classList.add(className('t'));
-        this.element.appendChild(trackElem);
-        this.trackElement = trackElem;
-        const barElem = doc.createElement('div');
-        barElem.classList.add(className('b'));
-        trackElem.appendChild(barElem);
-        this.barElement = barElem;
-        const knobElems = ['min', 'max'].map((modifier) => {
-            const elem = doc.createElement('div');
-            elem.classList.add(className('k'), className('k', modifier));
-            trackElem.appendChild(elem);
-            return elem;
-        });
-        this.knobElements = [knobElems[0], knobElems[1]];
+        const btnMinus = doc.createElement('button');
+        btnMinus.textContent = '-';
+        btnMinus.classList.add(className('b'));
+        config.viewProps.bindDisabled(btnMinus);
+        this.element.appendChild(btnMinus);
+        this.btnMinus = btnMinus;
+        const btnPlus = doc.createElement('button');
+        btnPlus.textContent = '+';
+        btnPlus.classList.add(className('b'));
+        config.viewProps.bindDisabled(btnPlus);
+        this.element.appendChild(btnPlus);
+        this.btnPlus = btnPlus;
+        // this.value_ = config.value;
+        // this.value_.emitter.on('change', this.onValueChange_);
         this.update_();
-    }
-    valueToX_(value) {
-        const min = this.sliderProps_.get('min');
-        const max = this.sliderProps_.get('max');
-        return constrainRange(mapRange(value, min, max, 0, 1), 0, 1) * 100;
     }
     update_() {
-        const v = this.value_.rawValue;
-        if (v.length === 0) {
-            this.element.classList.add(className(undefined, 'zero'));
-        }
-        else {
-            this.element.classList.remove(className(undefined, 'zero'));
-        }
-        const xs = [this.valueToX_(v.min), this.valueToX_(v.max)];
-        this.barElement.style.left = `${xs[0]}%`;
-        this.barElement.style.right = `${100 - xs[1]}%`;
-        this.knobElements.forEach((elem, index) => {
-            elem.style.left = `${xs[index]}%`;
-        });
-    }
-    onSliderPropsChange_() {
-        this.update_();
-    }
-    onValueChange_() {
-        this.update_();
+        // const v = this.value_.rawValue;
     }
 }
 
-class RangeSliderController {
+class StepperButtonsController {
     constructor(doc, config) {
-        this.grabbing_ = null;
-        this.grabOffset_ = 0;
-        this.onPointerDown_ = this.onPointerDown_.bind(this);
-        this.onPointerMove_ = this.onPointerMove_.bind(this);
-        this.onPointerUp_ = this.onPointerUp_.bind(this);
-        this.sliderProps = config.sliderProps;
-        this.viewProps = config.viewProps;
         this.value = config.value;
-        this.view = new RangeSliderView(doc, {
-            sliderProps: this.sliderProps,
+        this.viewProps = config.viewProps;
+        this.view = new StepperButtonsView(doc, {
             value: this.value,
             viewProps: config.viewProps,
         });
-        const ptHandler = new PointerHandler(this.view.trackElement);
-        ptHandler.emitter.on('down', this.onPointerDown_);
-        ptHandler.emitter.on('move', this.onPointerMove_);
-        ptHandler.emitter.on('up', this.onPointerUp_);
+        this.view.btnMinus.addEventListener('click', this.decrementValue_);
+        this.view.btnPlus.addEventListener('click', this.incrementValue_);
     }
-    ofs_() {
-        if (this.grabbing_ === 'min') {
-            return this.view.knobElements[0].getBoundingClientRect().width / 2;
-        }
-        if (this.grabbing_ === 'max') {
-            return -this.view.knobElements[1].getBoundingClientRect().width / 2;
-        }
-        return 0;
+    decrementValue_() {
+        var _a;
+        const v = (_a = this.value.rawValue.val) !== null && _a !== void 0 ? _a : 0;
+        const step = 1; // fill this out 
+        this.value.setRawValue(new Stepper(v + step));
+        // where is min and max handled?
     }
-    valueFromData_(data) {
-        if (!data.point) {
-            return null;
-        }
-        const p = (data.point.x + this.ofs_()) / data.bounds.width;
-        const min = this.sliderProps.get('min');
-        const max = this.sliderProps.get('max');
-        return mapRange(p, 0, 1, min, max);
-    }
-    onPointerDown_(ev) {
-        if (!ev.data.point) {
-            return;
-        }
-        const p = ev.data.point.x / ev.data.bounds.width;
-        const v = this.value.rawValue;
-        const min = this.sliderProps.get('min');
-        const max = this.sliderProps.get('max');
-        const pmin = mapRange(v.min, min, max, 0, 1);
-        const pmax = mapRange(v.max, min, max, 0, 1);
-        if (Math.abs(pmax - p) <= 0.025) {
-            this.grabbing_ = 'max';
-        }
-        else if (Math.abs(pmin - p) <= 0.025) {
-            this.grabbing_ = 'min';
-        }
-        else if (p >= pmin && p <= pmax) {
-            this.grabbing_ = 'length';
-            this.grabOffset_ = mapRange(p - pmin, 0, 1, 0, max - min);
-        }
-        else if (p < pmin) {
-            this.grabbing_ = 'min';
-            this.onPointerMove_(ev);
-        }
-        else if (p > pmax) {
-            this.grabbing_ = 'max';
-            this.onPointerMove_(ev);
-        }
-    }
-    applyPointToValue_(data, opts) {
-        const v = this.valueFromData_(data);
-        if (v === null) {
-            return;
-        }
-        const rmin = this.sliderProps.get('min');
-        const rmax = this.sliderProps.get('max');
-        if (this.grabbing_ === 'min') {
-            this.value.setRawValue(new Interval(v, this.value.rawValue.max), opts);
-        }
-        else if (this.grabbing_ === 'max') {
-            this.value.setRawValue(new Interval(this.value.rawValue.min, v), opts);
-        }
-        else if (this.grabbing_ === 'length') {
-            const len = this.value.rawValue.length;
-            let min = v - this.grabOffset_;
-            let max = min + len;
-            if (min < rmin) {
-                min = rmin;
-                max = rmin + len;
-            }
-            else if (max > rmax) {
-                min = rmax - len;
-                max = rmax;
-            }
-            this.value.setRawValue(new Interval(min, max), opts);
-        }
-    }
-    onPointerMove_(ev) {
-        this.applyPointToValue_(ev.data, {
-            forceEmit: false,
-            last: false,
-        });
-    }
-    onPointerUp_(ev) {
-        this.applyPointToValue_(ev.data, {
-            forceEmit: true,
-            last: true,
-        });
-        this.grabbing_ = null;
+    incrementValue_() {
+        var _a;
+        const v = (_a = this.value.rawValue.val) !== null && _a !== void 0 ? _a : 0;
+        const step = 1; // fill this out 
+        this.value.setRawValue(new Stepper(v + step));
     }
 }
 
-class RangeSliderTextController {
+class StepperTextController {
     constructor(doc, config) {
         this.value = config.value;
         this.viewProps = config.viewProps;
-        this.sc_ = new RangeSliderController(doc, config);
+        this.sc_ = new StepperButtonsController(doc, config);
         const axis = {
-            constraint: config.constraint,
             textProps: config.textProps,
         };
         this.tc_ = new PointNdTextController(doc, {
-            assembly: IntervalAssembly,
-            axes: [axis, axis],
+            assembly: StepperAssembly,
+            axes: [axis],
             parser: config.parser,
             value: this.value,
             viewProps: config.viewProps,
         });
-        this.view = new RangeSliderTextView(doc, {
-            sliderView: this.sc_.view,
+        this.view = new StepperTextView(doc, {
+            buttonsView: this.sc_.view,
             textView: this.tc_.view,
         });
     }
@@ -8855,83 +8722,51 @@ class RangeSliderTextController {
     }
 }
 
-function intervalFromUnknown(value) {
-    return Interval.isObject(value)
-        ? new Interval(value.min, value.max)
-        : new Interval(0, 0);
+function stepperFromUnknown(value) {
+    return Stepper.isObject(value)
+        ? new Stepper(value.val)
+        : new Stepper(0);
 }
-function writeInterval(target, value) {
-    target.writeProperty('max', value.max);
-    target.writeProperty('min', value.min);
+function writeStepper(target, value) {
+    target.writeProperty('val', value.val);
 }
 
-function createConstraint(params) {
-    const constraints = [];
-    const rc = createRangeConstraint(params);
-    if (rc) {
-        constraints.push(rc);
-    }
-    const sc = createStepConstraint(params);
-    if (sc) {
-        constraints.push(sc);
-    }
-    return new IntervalConstraint(new CompositeConstraint(constraints));
-}
 const StepperInputPlugin = createPlugin({
-    id: 'input-interval',
+    id: 'input-stepper',
     type: 'input',
     accept: (exValue, params) => {
-        if (!Interval.isObject(exValue)) {
+        if (!Stepper.isObject(exValue)) {
             return null;
         }
         const result = parseRecord(params, (p) => (Object.assign(Object.assign({}, createNumberTextInputParamsParser(p)), { readonly: p.optional.constant(false) })));
-        return result
-            ? {
-                initialValue: new Interval(exValue.min, exValue.max),
-                params: result,
-            }
-            : null;
+        return result ? {
+            initialValue: new Stepper(exValue.val),
+            params: result,
+        } : null;
     },
     binding: {
-        reader: (_args) => intervalFromUnknown,
-        constraint: (args) => createConstraint(args.params),
-        equals: Interval.equals,
-        writer: (_args) => writeInterval,
+        reader: (_args) => stepperFromUnknown,
+        writer: (_args) => writeStepper,
     },
     controller(args) {
         const v = args.value;
-        const c = args.constraint;
-        if (!(c instanceof IntervalConstraint)) {
-            throw TpError.shouldNeverHappen();
-        }
-        const midValue = (v.rawValue.min + v.rawValue.max) / 2;
-        const textProps = ValueMap.fromObject(createNumberTextPropsObject(args.params, midValue));
-        const drc = c.edge && findConstraint(c.edge, DefiniteRangeConstraint);
-        if (drc) {
-            return new RangeSliderTextController(args.document, {
-                constraint: c.edge,
-                parser: parseNumber,
-                sliderProps: new ValueMap({
-                    keyScale: textProps.value('keyScale'),
-                    max: drc.values.value('max'),
-                    min: drc.values.value('min'),
-                }),
-                textProps: textProps,
-                value: v,
-                viewProps: args.viewProps,
-            });
-        }
-        const axis = {
-            constraint: c.edge,
-            textProps: textProps,
-        };
-        return new PointNdTextController(args.document, {
-            assembly: IntervalAssembly,
-            axes: [axis, axis],
+        const textProps = ValueMap.fromObject(createNumberTextPropsObject(args.params, v.rawValue.val));
+        return new StepperTextController(args.document, {
             parser: parseNumber,
+            textProps: textProps,
             value: v,
             viewProps: args.viewProps,
         });
+        // const axis = {
+        // 	textProps: textProps,
+        // } as PointAxis;
+        // return new PointNdTextController(args.document, {
+        // 	assembly: StepperAssembly,
+        // 	axes: [axis], // axes: [axis, axis],
+        // 	parser: parseNumber,
+        // 	value: v,
+        // 	viewProps: args.viewProps,
+        // });
     },
 });
 
@@ -8949,4 +8784,4 @@ const plugins = [
     StepperInputPlugin,
 ];
 
-export { ButtonCellApi, ButtonGridApi, ButtonGridController, CubicBezier, CubicBezierApi, CubicBezierAssembly, CubicBezierController, CubicBezierGraphController, CubicBezierGraphView, CubicBezierPickerController, CubicBezierPickerView, CubicBezierPreviewView, CubicBezierView, FpsGraphBladeApi, FpsGraphController, FpsView, Fpswatch, Interval$1 as Interval, IntervalAssembly$1 as IntervalAssembly, IntervalConstraint$1 as IntervalConstraint, RadioCellApi, RadioController, RadioGridApi, RadioGridController, RadioView, RangeSliderController$1 as RangeSliderController, RangeSliderTextController$1 as RangeSliderTextController, RangeSliderTextView$1 as RangeSliderTextView, RangeSliderView$1 as RangeSliderView, TpRadioGridChangeEvent, css, id, plugins };
+export { ButtonCellApi, ButtonGridApi, ButtonGridController, CubicBezier, CubicBezierApi, CubicBezierAssembly, CubicBezierController, CubicBezierGraphController, CubicBezierGraphView, CubicBezierPickerController, CubicBezierPickerView, CubicBezierPreviewView, CubicBezierView, FpsGraphBladeApi, FpsGraphController, FpsView, Fpswatch, Interval, IntervalAssembly, IntervalConstraint, RadioCellApi, RadioController, RadioGridApi, RadioGridController, RadioView, RangeSliderController, RangeSliderTextController, RangeSliderTextView, RangeSliderView, Stepper, StepperAssembly, StepperButtonsController, StepperButtonsView, StepperTextController, StepperTextView, TpRadioGridChangeEvent, css, id, plugins, stepperFromUnknown, writeStepper };

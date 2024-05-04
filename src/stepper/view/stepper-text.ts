@@ -1,31 +1,31 @@
 import {ClassName, PointNdTextController, View} from '@tweakpane/core';
-
-import {Interval} from '../model/stepper.js';
-import {RangeSliderView} from './stepper-slider.js';
+import {Stepper} from '../model/stepper.js';
+import {StepperButtonsView} from './stepper-buttons.js';
 
 interface Config {
-	sliderView: RangeSliderView;
-	textView: PointNdTextController<Interval>['view'];
+	buttonsView: StepperButtonsView;
+	textView: PointNdTextController<Stepper>['view'];
 }
 
-const className = ClassName('rsltxt');
+const className = ClassName('step'); // 'steptxt' if you want a separate classname
 
-export class RangeSliderTextView implements View {
+export class StepperTextView implements View {
 	public readonly element: HTMLElement;
-	private sliderView_: RangeSliderView;
+	private buttonsView_: StepperButtonsView;
 	private textView_: PointNdTextController<InputEvent>['view'];
 
 	constructor(doc: Document, config: Config) {
-		this.sliderView_ = config.sliderView;
+		this.buttonsView_ = config.buttonsView;
 		this.textView_ = config.textView;
 
 		this.element = doc.createElement('div');
 		this.element.classList.add(className());
 
-		const sliderElem = doc.createElement('div');
-		sliderElem.classList.add(className('s'));
-		sliderElem.appendChild(this.sliderView_.element);
-		this.element.appendChild(sliderElem);
+		const buttonsElem = doc.createElement('div');
+		// not sure why s and t. maybe should be left and right, or not at all
+		buttonsElem.classList.add(className('s')); 
+		buttonsElem.appendChild(this.buttonsView_.element);
+		this.element.appendChild(buttonsElem);
 
 		const textElem = doc.createElement('div');
 		textElem.classList.add(className('t'));
