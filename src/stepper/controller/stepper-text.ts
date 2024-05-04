@@ -39,12 +39,10 @@ export class StepperTextController implements ValueController<Stepper, StepperTe
 			textProps: config.textProps,
 		} as PointAxis;
 
-		console.log(axis);
-
 		this.tc_ = new PointNdTextController(doc, {
 			assembly: StepperAssembly,
 			axes: [axis], 
-			parser: config.parser, // bezier uses parseNumber
+			parser: config.parser, 
 			value: this.value,
 			viewProps: config.viewProps,
 		});

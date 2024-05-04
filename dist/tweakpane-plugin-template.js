@@ -7146,8 +7146,8 @@ class CubicBezier {
     }
 }
 const CubicBezierAssembly = {
-    toComponents: (p) => p.toObject(),
     fromComponents: (comps) => new CubicBezier(...comps),
+    toComponents: (p) => p.toObject(),
 };
 
 function cubicBezierToString(cb) {
@@ -8612,6 +8612,9 @@ class Stepper {
         }
         return true;
     }
+    static equals(v1, v2) {
+        return v1.val === v2.val;
+    }
     toObject() {
         return {
             val: this.val,
@@ -8623,7 +8626,7 @@ const StepperAssembly = {
     toComponents: (p) => [p.val],
 };
 
-const className$1 = ClassName('step'); // 'steptxt' if you want a separate classname
+const className$1 = ClassName('step');
 class StepperTextView {
     constructor(doc, config) {
         this.buttonsView_ = config.buttonsView;
@@ -8707,7 +8710,6 @@ class StepperTextController {
             constraint: config.constraint,
             textProps: config.textProps,
         };
-        console.log(axis);
         this.tc_ = new PointNdTextController(doc, {
             assembly: StepperAssembly,
             axes: [axis],
@@ -8775,7 +8777,6 @@ const StepperInputPlugin = createPlugin({
     binding: {
         reader: (_args) => stepperFromUnknown,
         writer: (_args) => writeStepper,
-        //constraint: (args) => createConstraint(args.params),
         constraint(args) {
             const constraints = [];
             const cr = createRangeConstraint(args.params);
@@ -8797,6 +8798,7 @@ const StepperInputPlugin = createPlugin({
             throw TpError.shouldNeverHappen();
         }
         const textProps = ValueMap.fromObject(createNumberTextPropsObject(args.params, v.rawValue.val));
+        console.log(c.edge);
         return new StepperTextController(args.document, {
             constraint: c.edge,
             parser: parseNumber,

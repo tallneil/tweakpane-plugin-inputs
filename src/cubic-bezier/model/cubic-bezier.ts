@@ -114,6 +114,6 @@ export class CubicBezier {
 }
 
 export const CubicBezierAssembly: PointNdAssembly<CubicBezier> = {
-	toComponents: (p: CubicBezier) => p.toObject(),
 	fromComponents: (comps: number[]) => new CubicBezier(...comps),
+	toComponents: (p: CubicBezier) => p.toObject(),
 };

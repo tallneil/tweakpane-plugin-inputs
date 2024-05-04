@@ -60,9 +60,8 @@ export const StepperInputPlugin: InputBindingPlugin<
 	},
 	binding: {
 		reader: (_args) => stepperFromUnknown,
-		writer: (_args) => writeStepper,
 
-		//constraint: (args) => createConstraint(args.params),
+		writer: (_args) => writeStepper,
 
 		constraint(args) {
 			const constraints = [];
@@ -88,6 +87,8 @@ export const StepperInputPlugin: InputBindingPlugin<
 		const textProps = ValueMap.fromObject(
 			createNumberTextPropsObject(args.params, v.rawValue.val),
 		);
+
+		console.log(c.edge);
 
 		return new StepperTextController(args.document, {
 			constraint: c.edge,

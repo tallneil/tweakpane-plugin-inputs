@@ -22,6 +22,10 @@ export class Stepper {
 		return true;
 	}
 
+	public static equals(v1: Stepper, v2: Stepper): boolean {
+		return v1.val === v2.val;
+	}
+
 	public toObject(): StepperObject {
 		return {
 			val: this.val,

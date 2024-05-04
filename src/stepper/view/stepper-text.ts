@@ -7,7 +7,7 @@ interface Config {
 	textView: PointNdTextController<Stepper>['view'];
 }
 
-const className = ClassName('step'); // 'steptxt' if you want a separate classname
+const className = ClassName('step'); 
 
 export class StepperTextView implements View {
 	public readonly element: HTMLElement;
