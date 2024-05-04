@@ -1,5 +1,5 @@
 import {BindingTarget} from '@tweakpane/core';
-import {Stepper} from './stepper.js';
+import {Stepper} from '../model/stepper.js';
 
 export function stepperFromUnknown(value: unknown): Stepper {
 	return Stepper.isObject(value)

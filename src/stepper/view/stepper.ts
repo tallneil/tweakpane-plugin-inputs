@@ -1,5 +1,5 @@
 import {ClassName, Value, View, ViewProps} from '@tweakpane/core';
-import {Stepper} from './stepper.js';
+import {Stepper} from '../model/stepper.js';
 
 interface Config {
 	value: Value<Stepper>;

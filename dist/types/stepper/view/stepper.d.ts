@@ -1,13 +1,15 @@
 import { Value, View, ViewProps } from '@tweakpane/core';
+import { Stepper } from '../model/stepper.js';
 interface Config {
-    value: Value<number>;
+    value: Value<Stepper>;
     viewProps: ViewProps;
 }
-export declare class PluginView implements View {
+export declare class StepperPluginView implements View {
     readonly element: HTMLElement;
     private value_;
-    private dotElems_;
-    private textElem_;
+    private btnMinus;
+    private btnPlus;
+    private numInput;
     constructor(doc: Document, config: Config);
     private refresh_;
     private onValueChange_;

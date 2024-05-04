@@ -10,10 +10,10 @@ import {
 	parseRecord,
 } from '@tweakpane/core';
 
-import {StepperController} from './controller.js';
-import {Stepper, StepperObject} from './stepper.js';
-import {stepperFromUnknown, writeStepper} from './converter.js';
-import {StepperConstraint} from './constraint.js';
+import {StepperController} from './controller/stepper.js';
+import {Stepper, StepperObject} from './model/stepper.js';
+import {stepperFromUnknown, writeStepper} from './converter/stepper.js';
+import {StepperConstraint} from './constraint/stepper.js';
 
 export interface StepperInputParams extends NumberInputParams, BaseInputParams {
 	max?: number;

@@ -7,16 +7,18 @@
 <body>
 	<script type="module">
 		import {Pane} from '../node_modules/tweakpane/dist/tweakpane.min.js';
-		import * as StepperInputPlugin from '../dist/tweakpane-plugin-template.js'; // TweakpaneTemplatePlugin
+		import * as TweakpanePluginInputs from '../dist/tweakpane-plugin-template.js';
 
 		const params = {
 			rangeStepInput: 2,
 			numberStepInput: 2,
 			stepper: 2,
+			interval: {min: 40, max: 60},
+			radiogrid: 25,
 		};
 
 		const pane = new Pane();
-		pane.registerPlugin(StepperInputPlugin); // TweakpaneTemplatePlugin
+		pane.registerPlugin(TweakpanePluginInputs); 
 
 		pane.addBinding(params, 'rangeStepInput', {
 			min: -10,
@@ -27,6 +29,69 @@
 			min: -10,
 			step: 1,
 		});
+		pane.addBinding(params, 'interval', {
+			format: (v) => v.toFixed(1),
+			min: 20,
+			max: 80,
+		});
+
+		const scales = [10, 20, 25, 50, 75, 100];
+		pane.addBinding(params, 'radiogrid', {
+			view: 'radiogrid',
+			groupName: 'scale',
+			size: [3, 2],
+			cells: (x, y) => ({
+				title: `${scales[y * 3 + x]}%`,
+				value: scales[y * 3 + x],
+			}),
+			label: 'radiogrid',
+		}).on('change', (ev) => {
+			console.log(ev);
+		});
+
+		// // Blades
+		// const fpsGraph = panes[1].addBlade({
+		// 	view: 'fpsgraph',
+
+		// 	label: 'fpsgraph',
+		// 	rows: 2,
+		// });
+		// function render() {
+		// 	fpsGraph.begin();
+
+		// 	// Rendering
+		// 	fpsGraph.end();
+		// 	requestAnimationFrame(render);
+		// }
+		// render();
+
+		pane.addBlade({
+			view: 'cubicbezier',
+			value: [0.5, 0, 0.5, 1],
+
+			expanded: true,
+			label: 'cubic\nbezier',
+			picker: 'inline',
+		}).on('change', (ev) => {
+			console.log(ev);
+		});
+
+		pane.addBlade({
+			view: 'buttongrid',
+			size: [3, 3],
+			cells: (x, y) => ({
+				title: [
+					['NW', 'N', 'NE'],
+					['W',  '*', 'E'],
+					['SW', 'S', 'SE'],
+				][y][x],
+			}),
+			label: 'button\ngrid',
+		}).on('click', (ev) => {
+			console.log(ev);
+		});
+
+
 		pane.addBinding(params, 'stepper', {
 			view: 'stepper',
 			// min: -10,
@@ -34,7 +99,28 @@
 			// step: 1,
 		}); //.on('change', (ev) => {console.log(ev.value);});
 
+
+
 		window.pane = pane;
+
+		// if (location.search === '?readme') {
+		// 	panes.forEach((pane) => {
+		// 		pane.children.forEach((child) => {
+		// 			const wrapperElem = document.createElement('div');
+		// 			wrapperElem.classList.add('wrapper');
+		// 			document.body.appendChild(wrapperElem);
+
+		// 			const newPane = new Pane({
+		// 				container: wrapperElem,
+		// 			});
+		// 			newPane.registerPlugin(TweakpaneEssentialsPlugin);
+		// 			newPane.add(child);
+		// 		});
+		// 	});
+		// }
+
+
+
 	</script>
 </body>
 </html>
