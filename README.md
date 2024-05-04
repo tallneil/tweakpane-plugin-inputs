@@ -1,8 +1,11 @@
 # Inputs for Tweakpane
-Additional inputs for [Tweakpane][tweakpane] GUI, including a numerical stepper input.
+Additional inputs for [Tweakpane](https://tweakpane.github.io/docs/) GUI, including a numerical stepper input.
+
+### Author
+Made by @tallneil. Thanks to @cocopon, the creator of Tweakpane.
 
 ## Stepper input
-The stepper is an alternative to range slider input, that is better-suited for small sets of discrete ranges. 
+The stepper is an alternative to [range slider input](https://tweakpane.github.io/docs/input-bindings/#number_range). A stepper may be better-suited for small sets of discrete ranges, whereas a range slider is ideal for larger, continuous ranges.
 
 ### Params
 `min`: Range minimum (optional)
@@ -11,7 +14,7 @@ The stepper is an alternative to range slider input, that is better-suited for s
 
 ### Features 
 * Use the `-` and `+` buttons to decrement or increment value by `step`
-* Support for Tweakpane input features, including `keypad` and `point and slide`. 
+* Support for existing Tweakpane `number input` features, including `point and slide`. 
 
 
 
