@@ -8319,6 +8319,8 @@ const IntervalInputPlugin = createPlugin({
                 viewProps: args.viewProps,
             });
         }
+        // I think this is saying if the conditions aren't met, skip the slider 
+        // and return 2 point and text inputs 
         const axis = {
             constraint: c.edge,
             textProps: textProps,
@@ -8629,7 +8631,6 @@ class StepperTextView {
         this.element = doc.createElement('div');
         this.element.classList.add(className$1());
         const buttonsElem = doc.createElement('div');
-        // not sure why s and t. maybe should be left and right, or not at all
         buttonsElem.classList.add(className$1('s'));
         buttonsElem.appendChild(this.buttonsView_.element);
         this.element.appendChild(buttonsElem);
@@ -8662,12 +8663,7 @@ class StepperButtonsView {
         config.viewProps.bindDisabled(btnPlus);
         this.element.appendChild(btnPlus);
         this.btnPlus = btnPlus;
-        // this.value_ = config.value;
-        // this.value_.emitter.on('change', this.onValueChange_);
-        this.update_();
-    }
-    update_() {
-        // const v = this.value_.rawValue;
+        //this.update_();
     }
 }
 
@@ -8684,13 +8680,20 @@ class StepperButtonsController {
             const v = (_a = this.value.rawValue.val) !== null && _a !== void 0 ? _a : 0;
             const step = 1; // fill this out 
             const nv = v - step;
-            this.value.setRawValue(new Stepper(nv));
+            this.value.setRawValue(new Stepper(nv), {
+                forceEmit: true,
+                last: true,
+            });
         });
-        this.view.btnMinus.addEventListener('click', () => {
+        this.view.btnPlus.addEventListener('click', () => {
             var _a;
             const v = (_a = this.value.rawValue.val) !== null && _a !== void 0 ? _a : 0;
             const step = 1; // fill this out 
-            this.value.setRawValue(new Stepper(v + step));
+            const nv = v + step;
+            this.value.setRawValue(new Stepper(nv), {
+                forceEmit: true,
+                last: true,
+            });
         });
     }
 }
@@ -8701,8 +8704,10 @@ class StepperTextController {
         this.viewProps = config.viewProps;
         this.sc_ = new StepperButtonsController(doc, config);
         const axis = {
+            constraint: config.constraint,
             textProps: config.textProps,
         };
+        console.log(axis);
         this.tc_ = new PointNdTextController(doc, {
             assembly: StepperAssembly,
             axes: [axis],
@@ -8727,6 +8732,16 @@ function stepperFromUnknown(value) {
 }
 function writeStepper(target, value) {
     target.writeProperty('val', value.val);
+}
+
+class StepperConstraint {
+    constructor(edge) {
+        this.edge = edge;
+    }
+    constrain(value) {
+        var _a, _b;
+        return new Stepper((_b = (_a = this.edge) === null || _a === void 0 ? void 0 : _a.constrain(value.val)) !== null && _b !== void 0 ? _b : value.val);
+    }
 }
 
 // NOTE: JSDoc comments of `InputBindingPlugin` can be useful to know details about each property
@@ -8756,150 +8771,13 @@ const StepperInputPlugin = createPlugin({
             initialValue: new Stepper(exValue),
             params: result,
         } : null;
-        // const result = parseRecord<StepperInputParams>(params, (p) => ({
-        // 	view: p.required.constant('stepper'),
-        // 	// ...createNumberTextInputParamsParser(p),
-        // 	// readonly: p.optional.constant(false),
-        // }));
-        // return result ? {
-        // 	initialValue: new Stepper(exValue.val),
-        // 	params: result,
-        // } : null;
     },
     binding: {
         reader: (_args) => stepperFromUnknown,
         writer: (_args) => writeStepper,
-        // reader(_args) {
-        // 	return Stepper.isObject(_args)
-        // 	? new Stepper(_args.val)
-        // 	: new Stepper(0);
-        // 	// return (exValue: unknown): number => {
-        // 	// 	// Convert an external unknown value into the internal value
-        // 	// 	return typeof exValue === 'number' ? exValue : 0;
-        // 	// };
-        // },
-        // constraint(args) {
-        // 	// Create a value constraint from the user input
-        // 	const constraints = [];
-        // 	const cr = createRangeConstraint(args.params);
-        // 	if (cr) {
-        // 		constraints.push(cr);
-        // 	}
-        // 	const cs = createStepConstraint(args.params);
-        // 	if (cs) {
-        // 		constraints.push(cs);
-        // 	}
-        // 	// Use `CompositeConstraint` to combine multiple constraints
-        // 	return new CompositeConstraint(constraints);
-        // },
-        // writer(_args) {
-        // 	return (target: BindingTarget, inValue) => {
-        // 		// Use `target.write()` to write the primitive value to the target,
-        // 		// or `target.writeProperty()` to write a property of the target
-        // 		target.write(inValue);
-        // 	};
-        // },
-    },
-    controller(args) {
-        const v = args.value;
-        const textProps = ValueMap.fromObject(createNumberTextPropsObject(args.params, v.rawValue.val));
-        return new StepperTextController(args.document, {
-            parser: parseNumber,
-            textProps: textProps,
-            value: v,
-            viewProps: args.viewProps,
-        });
-        // return new StepperTextController(args.document, {
-        // 	parser: parseNumber,
-        // 	textProps: textProps,
-        // 	value: v,
-        // 	viewProps: args.viewProps,
-        // });
-        // return new StepperTextController(args.document, {
-        // 	value: new Stepper(args.value.rawValue),
-        // 	viewProps: args.viewProps,
-        // });
-    },
-});
-/*
-
-import {
-    BaseInputParams,
-    BindingTarget,
-    CompositeConstraint,
-    createPlugin,
-    createRangeConstraint,
-    createStepConstraint,
-    InputBindingPlugin,
-    parseRecord,
-} from '@tweakpane/core';
-
-import {PluginController} from './controller.js';
-
-export interface PluginInputParams extends BaseInputParams {
-    max?: number;
-    min?: number;
-    step?: number;
-    view: 'stepper';
-}
-
-// NOTE: JSDoc comments of `InputBindingPlugin` can be useful to know details about each property
-//
-// `InputBindingPlugin<In, Ex, P>` means...
-// - The plugin receives the bound value as `Ex`,
-// - converts `Ex` into `In` and holds it
-// - P is the type of the parsed parameters
-//
-export const StepperInputPlugin: InputBindingPlugin<
-    number,
-    number,
-    PluginInputParams
-> = createPlugin({
-    id: 'stepperInput',
-
-    // type: The plugin type.
-    // - 'input': Input binding
-    // - 'monitor': Monitor binding
-    // - 'blade': Blade without binding
-    type: 'input',
-
-    accept(exValue: unknown, params: Record<string, unknown>) {
-        if (typeof exValue !== 'number') {
-            // Return null to deny the user input
-            return null;
-        }
-
-        // Parse parameters object
-        const result = parseRecord<PluginInputParams>(params, (p) => ({
-            // `view` option may be useful to provide a custom control for primitive values
-            view: p.required.constant('stepper'),
-            max: p.optional.number,
-            min: p.optional.number,
-            step: p.optional.number ?? 1,
-        }));
-        if (!result) {
-            return null;
-        }
-
-        // Return a typed value and params to accept the user input
-        return {
-            initialValue: exValue,
-            params: result,
-        };
-    },
-
-    binding: {
-        reader(_args) {
-            return (exValue: unknown): number => {
-                // Convert an external unknown value into the internal value
-                return typeof exValue === 'number' ? exValue : 0;
-            };
-        },
-
+        //constraint: (args) => createConstraint(args.params),
         constraint(args) {
-            // Create a value constraint from the user input
             const constraints = [];
-            // You can reuse existing functions of the default plugins
             const cr = createRangeConstraint(args.params);
             if (cr) {
                 constraints.push(cr);
@@ -8909,28 +8787,25 @@ export const StepperInputPlugin: InputBindingPlugin<
                 constraints.push(cs);
             }
             // Use `CompositeConstraint` to combine multiple constraints
-            return new CompositeConstraint(constraints);
-        },
-
-        writer(_args) {
-            return (target: BindingTarget, inValue) => {
-                // Use `target.write()` to write the primitive value to the target,
-                // or `target.writeProperty()` to write a property of the target
-                target.write(inValue);
-            };
+            return new StepperConstraint(new CompositeConstraint(constraints));
         },
     },
-
     controller(args) {
-        // Create a controller for the plugin
-        return new PluginController(args.document, {
-            value: args.value,
+        const v = args.value;
+        const c = args.constraint;
+        if (!(c instanceof StepperConstraint)) {
+            throw TpError.shouldNeverHappen();
+        }
+        const textProps = ValueMap.fromObject(createNumberTextPropsObject(args.params, v.rawValue.val));
+        return new StepperTextController(args.document, {
+            constraint: c.edge,
+            parser: parseNumber,
+            textProps: textProps,
+            value: v,
             viewProps: args.viewProps,
         });
     },
 });
-
-*/
 
 const id = 'essentials';
 const css = '.tp-stepv,.tp-stepv_i,.tp-cbzgv,.tp-stepv_b,.tp-radv_b,.tp-rslv_k,.tp-cbzv_b{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-color:rgba(0,0,0,0);border-width:0;font-family:inherit;font-size:inherit;font-weight:inherit;margin:0;outline:none;padding:0}.tp-stepv_b,.tp-radv_b,.tp-rslv_k,.tp-cbzv_b{background-color:var(--btn-bg);border-radius:var(--bld-br);color:var(--btn-fg);cursor:pointer;display:block;font-weight:bold;height:var(--cnt-usz);line-height:var(--cnt-usz);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tp-stepv_b:hover,.tp-radv_b:hover,.tp-rslv_k:hover,.tp-cbzv_b:hover{background-color:var(--btn-bg-h)}.tp-stepv_b:focus,.tp-radv_b:focus,.tp-rslv_k:focus,.tp-cbzv_b:focus{background-color:var(--btn-bg-f)}.tp-stepv_b:active,.tp-radv_b:active,.tp-rslv_k:active,.tp-cbzv_b:active{background-color:var(--btn-bg-a)}.tp-stepv_b:disabled,.tp-radv_b:disabled,.tp-rslv_k:disabled,.tp-cbzv_b:disabled{opacity:.5}.tp-stepv,.tp-stepv_i,.tp-cbzgv{background-color:var(--in-bg);border-radius:var(--bld-br);box-sizing:border-box;color:var(--in-fg);font-family:inherit;height:var(--cnt-usz);line-height:var(--cnt-usz);min-width:0;width:100%}.tp-stepv:hover,.tp-stepv_i:hover,.tp-cbzgv:hover{background-color:var(--in-bg-h)}.tp-stepv:focus,.tp-stepv_i:focus,.tp-cbzgv:focus{background-color:var(--in-bg-f)}.tp-stepv:active,.tp-stepv_i:active,.tp-cbzgv:active{background-color:var(--in-bg-a)}.tp-stepv:disabled,.tp-stepv_i:disabled,.tp-cbzgv:disabled{opacity:.5}.tp-btngridv{border-radius:var(--bld-br);display:grid;overflow:hidden;gap:2px}.tp-btngridv.tp-v-disabled{opacity:.5}.tp-btngridv .tp-btnv_b:disabled{opacity:1}.tp-btngridv .tp-btnv_b:disabled .tp-btnv_t{opacity:.5}.tp-btngridv .tp-btnv_b{border-radius:0}.tp-cbzv{position:relative}.tp-cbzv_h{display:flex}.tp-cbzv_b{margin-right:4px;position:relative;width:var(--cnt-usz)}.tp-cbzv_b svg{display:block;height:16px;left:50%;margin-left:-8px;margin-top:-8px;position:absolute;top:50%;width:16px}.tp-cbzv_b svg path{stroke:var(--bs-bg);stroke-width:2}.tp-cbzv_t{flex:1}.tp-cbzv_p{height:0;margin-top:0;opacity:0;overflow:hidden;transition:height .2s ease-in-out,opacity .2s linear,margin .2s ease-in-out}.tp-cbzv.tp-cbzv-expanded .tp-cbzv_p{margin-top:var(--cnt-usp);opacity:1}.tp-cbzv.tp-cbzv-cpl .tp-cbzv_p{overflow:visible}.tp-cbzv .tp-popv{left:calc(-1*var(--cnt-hp));position:absolute;right:calc(-1*var(--cnt-hp));top:var(--cnt-usz)}.tp-cbzpv_t{margin-top:var(--cnt-usp)}.tp-cbzgv{height:auto;overflow:hidden;position:relative}.tp-cbzgv.tp-v-disabled{opacity:.5}.tp-cbzgv_p{left:16px;position:absolute;right:16px;top:0}.tp-cbzgv_g{cursor:pointer;display:block;height:calc(var(--cnt-usz)*5);width:100%}.tp-cbzgv_u{opacity:.1;stroke:var(--in-fg);stroke-dasharray:1}.tp-cbzgv_l{fill:rgba(0,0,0,0);stroke:var(--in-fg)}.tp-cbzgv_v{opacity:.5;stroke:var(--in-fg);stroke-dasharray:1}.tp-cbzgv_h{border:var(--in-fg) solid 1px;border-radius:50%;box-sizing:border-box;height:4px;margin-left:-2px;margin-top:-2px;pointer-events:none;position:absolute;width:4px}.tp-cbzgv:focus .tp-cbzgv_h-sel{background-color:var(--in-fg);border-width:0}.tp-cbzprvv{cursor:pointer;height:4px;padding:4px 0;position:relative}.tp-cbzprvv_g{display:block;height:100%;overflow:visible;width:100%}.tp-cbzprvv_t{opacity:.5;stroke:var(--mo-fg)}.tp-cbzprvv_m{background-color:var(--mo-fg);border-radius:50%;height:4px;margin-left:-2px;margin-top:-2px;opacity:0;position:absolute;top:50%;transition:opacity .2s ease-out;width:4px}.tp-cbzprvv_m.tp-cbzprvv_m-a{opacity:1}.tp-fpsv{position:relative}.tp-fpsv_l{bottom:4px;color:var(--mo-fg);line-height:1;right:4px;pointer-events:none;position:absolute}.tp-fpsv_u{margin-left:.2em;opacity:.7}.tp-rslv{cursor:pointer;padding-left:8px;padding-right:8px}.tp-rslv.tp-v-disabled{opacity:.5}.tp-rslv_t{height:calc(var(--cnt-usz));position:relative}.tp-rslv_t::before{background-color:var(--in-bg);border-radius:1px;content:"";height:2px;margin-top:-1px;position:absolute;top:50%;left:-4px;right:-4px}.tp-rslv_b{bottom:0;top:0;position:absolute}.tp-rslv_b::before{background-color:var(--in-fg);content:"";height:2px;margin-top:-1px;position:absolute;top:50%;left:0;right:0}.tp-rslv_k{height:calc(var(--cnt-usz) - 8px);margin-top:calc((var(--cnt-usz) - 8px)/-2);position:absolute;top:50%;width:8px}.tp-rslv_k.tp-rslv_k-min{margin-left:-8px}.tp-rslv_k.tp-rslv_k-max{margin-left:0}.tp-rslv.tp-rslv-zero .tp-rslv_k.tp-rslv_k-min{border-bottom-right-radius:0;border-top-right-radius:0}.tp-rslv.tp-rslv-zero .tp-rslv_k.tp-rslv_k-max{border-bottom-left-radius:0;border-top-left-radius:0}.tp-rsltxtv{display:flex}.tp-rsltxtv_s{flex:1}.tp-rsltxtv_t{flex:1;margin-left:4px}.tp-radv_l{display:block;position:relative}.tp-radv_i{left:0;opacity:0;position:absolute;top:0}.tp-radv_b{opacity:.5}.tp-radv_i:hover+.tp-radv_b{background-color:var(--btn-bg-h)}.tp-radv_i:focus+.tp-radv_b{background-color:var(--btn-bg-f)}.tp-radv_i:active+.tp-radv_b{background-color:var(--btn-bg-a)}.tp-radv_i:checked+.tp-radv_b{opacity:1}.tp-radv_t{bottom:0;color:inherit;left:0;overflow:hidden;position:absolute;right:0;text-align:center;text-overflow:ellipsis;top:0}.tp-radv_i:disabled+.tp-radv_b>.tp-radv_t{opacity:.5}.tp-radgridv{border-radius:var(--bld-br);display:grid;overflow:hidden;gap:2px}.tp-radgridv.tp-v-disabled{opacity:.5}.tp-radgridv .tp-radv_b{border-radius:0}.tp-stepv{display:flex;gap:var(--cnt-hp);background:none}.tp-stepv:hover,.tp-stepv:active{background:none}.tp-stepv.tp-v-disabled{opacity:.5}.tp-stepv_b{position:relative;width:var(--cnt-usz)}.tp-stepv_i{width:auto}';

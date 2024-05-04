@@ -43,13 +43,9 @@ export class StepperButtonsView implements View {
 		this.element.appendChild(btnPlus);
 		this.btnPlus = btnPlus;
 
-		// this.value_ = config.value;
-		// this.value_.emitter.on('change', this.onValueChange_);
-
-		this.update_();
+		//this.update_();
 	}
 
-	private update_(): void {
-		// const v = this.value_.rawValue;
-	}
+	// private update_(): void {
+	// }
 }

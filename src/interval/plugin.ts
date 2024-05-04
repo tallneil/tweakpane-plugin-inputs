@@ -97,10 +97,13 @@ export const IntervalInputPlugin: InputBindingPlugin<
 			});
 		}
 
+		// I think this is saying if the conditions aren't met, skip the slider 
+		// and return 2 point and text inputs 
 		const axis = {
 			constraint: c.edge,
 			textProps: textProps,
 		} as PointAxis;
+
 		return new PointNdTextController(args.document, {
 			assembly: IntervalAssembly,
 			axes: [axis, axis],

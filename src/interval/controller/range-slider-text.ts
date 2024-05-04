@@ -42,6 +42,7 @@ export class RangeSliderTextController
 			constraint: config.constraint,
 			textProps: config.textProps,
 		} as PointAxis;
+		
 		this.tc_ = new PointNdTextController(doc, {
 			assembly: IntervalAssembly,
 			axes: [axis, axis],

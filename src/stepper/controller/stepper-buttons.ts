@@ -29,13 +29,20 @@ export class StepperButtonsController implements ValueController<Stepper, Steppe
 			const v = this.value.rawValue.val ?? 0;
 			const step = 1; // fill this out 
 			const nv = v - step;
-			this.value.setRawValue(new Stepper(nv));
+			this.value.setRawValue(new Stepper(nv), {
+				forceEmit: true,
+				last: true,
+			});
 		});
 
-		this.view.btnMinus.addEventListener('click', () => {
+		this.view.btnPlus.addEventListener('click', () => {
 			const v = this.value.rawValue.val ?? 0;
 			const step = 1; // fill this out 
-			this.value.setRawValue(new Stepper(v + step));
+			const nv = v + step;
+			this.value.setRawValue(new Stepper(nv), {
+				forceEmit: true,
+				last: true,
+			});
 		});
 	}
 }

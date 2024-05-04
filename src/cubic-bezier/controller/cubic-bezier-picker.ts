@@ -56,7 +56,7 @@ export class CubicBezierPickerController
 		};
 		this.tc_ = new PointNdTextController(doc, {
 			assembly: CubicBezierAssembly,
-			axes: [xAxis, yAxis, xAxis, yAxis],
+			axes: [xAxis, yAxis, xAxis, yAxis], // creates 4 inputs
 			parser: parseNumber,
 			value: this.value,
 			viewProps: this.viewProps,

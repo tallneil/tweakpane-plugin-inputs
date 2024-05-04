@@ -22,7 +22,6 @@ export class StepperTextView implements View {
 		this.element.classList.add(className());
 
 		const buttonsElem = doc.createElement('div');
-		// not sure why s and t. maybe should be left and right, or not at all
 		buttonsElem.classList.add(className('s')); 
 		buttonsElem.appendChild(this.buttonsView_.element);
 		this.element.appendChild(buttonsElem);

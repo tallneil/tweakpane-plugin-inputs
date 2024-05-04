@@ -1,4 +1,5 @@
 import {
+	Constraint,
 	NumberTextProps,
 	Parser,
 	PointAxis,
@@ -6,6 +7,7 @@ import {
 	Value,
 	ValueController,
 	ViewProps,
+	parseNumber,
 } from '@tweakpane/core';
 
 import {Stepper, StepperAssembly} from '../model/stepper.js';
@@ -13,6 +15,7 @@ import {StepperTextView} from '../view/stepper-text.js';
 import {StepperButtonsController} from './stepper-buttons.js';
 
 interface Config {
+	constraint: Constraint<number> | undefined;
 	parser: Parser<number>;
 	textProps: NumberTextProps;
 	value: Value<Stepper>;
@@ -32,12 +35,16 @@ export class StepperTextController implements ValueController<Stepper, StepperTe
 		this.sc_ = new StepperButtonsController(doc, config);
 
 		const axis = {
+			constraint: config.constraint,
 			textProps: config.textProps,
 		} as PointAxis;
+
+		console.log(axis);
+
 		this.tc_ = new PointNdTextController(doc, {
 			assembly: StepperAssembly,
-			axes: [axis],// axes: [axis, axis], // is this where the 2 fields are being created?
-			parser: config.parser,
+			axes: [axis], 
+			parser: config.parser, // bezier uses parseNumber
 			value: this.value,
 			viewProps: config.viewProps,
 		});
