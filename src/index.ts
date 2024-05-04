@@ -1,5 +1,6 @@
 import {TpPlugin} from '@tweakpane/core';
 import {ButtonGridBladePlugin} from './button-grid/plugin.js';
+import {DotsInputPlugin} from './dots/plugin.js';
 import {CubicBezierBladePlugin} from './cubic-bezier/plugin.js';
 import {FpsGraphBladePlugin} from './fps-graph/plugin.js';
 import {IntervalInputPlugin} from './interval/plugin.js';
@@ -15,6 +16,7 @@ export const id = 'essentials';
 export const css = '__css__';
 export const plugins: TpPlugin[] = [
 	ButtonGridBladePlugin,
+	DotsInputPlugin,
 	CubicBezierBladePlugin,
 	FpsGraphBladePlugin,
 	IntervalInputPlugin,
@@ -28,6 +30,9 @@ export const plugins: TpPlugin[] = [
 export * from './button-grid/api/button-cell.js';
 export * from './button-grid/api/button-grid.js';
 export * from './button-grid/controller/button-grid.js';
+
+export * from './dots/controller/dots.js';
+export * from './dots/view/dots.js';
 
 export * from './cubic-bezier/api/cubic-bezier.js';
 export * from './cubic-bezier/controller/cubic-bezier.js';

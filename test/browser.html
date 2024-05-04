@@ -18,6 +18,7 @@
 			rangeStepInput: 2,
 			numberStepInput: 2,
 			radiogrid: 25,
+			dots: 8.5,
 			interval: {min: -10, max: 10},
 			stepper: 0,
 		};
@@ -73,6 +74,10 @@
 			label: 'button\ngrid',
 		}).on('click', (ev) => {
 			console.log(ev);
+		});
+
+		pane.addBinding(params, 'dots', {
+			view: 'dots',
 		});
 
 		pane.addBinding(params, 'interval', {

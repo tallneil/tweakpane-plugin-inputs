@@ -7043,6 +7043,174 @@ const ButtonGridBladePlugin = createPlugin({
     },
 });
 
+// Create a class name generator from the view name
+// ClassName('tmp') will generate a CSS class name like `tp-tmpv`
+const className$a = ClassName('tmp');
+// Custom view class should implement `View` interface
+class DotsView {
+    constructor(doc, config) {
+        this.dotElems_ = [];
+        // Create a root element for the plugin
+        this.element = doc.createElement('div');
+        this.element.classList.add(className$a());
+        // Bind view props to the element
+        config.viewProps.bindClassModifiers(this.element);
+        // Receive the bound value from the controller
+        this.value_ = config.value;
+        // Handle 'change' event of the value
+        this.value_.emitter.on('change', this.onValueChange_.bind(this));
+        // Create child elements
+        this.textElem_ = doc.createElement('div');
+        this.textElem_.classList.add(className$a('text'));
+        this.element.appendChild(this.textElem_);
+        // Apply the initial value
+        this.refresh_();
+        config.viewProps.handleDispose(() => {
+            // Called when the view is disposing
+            console.log('TODO: dispose view');
+        });
+    }
+    refresh_() {
+        const rawValue = this.value_.rawValue;
+        this.textElem_.textContent = rawValue.toFixed(2);
+        while (this.dotElems_.length > 0) {
+            const elem = this.dotElems_.shift();
+            if (elem) {
+                this.element.removeChild(elem);
+            }
+        }
+        const doc = this.element.ownerDocument;
+        const dotCount = Math.floor(rawValue);
+        for (let i = 0; i < dotCount; i++) {
+            const dotElem = doc.createElement('div');
+            dotElem.classList.add(className$a('dot'));
+            if (i === dotCount - 1) {
+                const fracElem = doc.createElement('div');
+                fracElem.classList.add(className$a('frac'));
+                const frac = rawValue - Math.floor(rawValue);
+                fracElem.style.width = `${frac * 100}%`;
+                fracElem.style.opacity = String(mapRange(frac, 0, 1, 1, 0.2));
+                dotElem.appendChild(fracElem);
+            }
+            this.dotElems_.push(dotElem);
+            this.element.appendChild(dotElem);
+        }
+    }
+    onValueChange_() {
+        this.refresh_();
+    }
+}
+
+// Custom controller class should implement `Controller` interface
+class DotsController {
+    constructor(doc, config) {
+        this.onPoint_ = this.onPoint_.bind(this);
+        // Receive the bound value from the plugin
+        this.value = config.value;
+        // and also view props
+        this.viewProps = config.viewProps;
+        this.viewProps.handleDispose(() => {
+            // Called when the controller is disposing
+            console.log('TODO: dispose controller');
+        });
+        // Create a custom view
+        this.view = new DotsView(doc, {
+            value: this.value,
+            viewProps: this.viewProps,
+        });
+        // You can use `PointerHandler` to handle pointer events in the same way as Tweakpane do
+        const ptHandler = new PointerHandler(this.view.element);
+        ptHandler.emitter.on('down', this.onPoint_);
+        ptHandler.emitter.on('move', this.onPoint_);
+        ptHandler.emitter.on('up', this.onPoint_);
+    }
+    onPoint_(ev) {
+        const data = ev.data;
+        if (!data.point) {
+            return;
+        }
+        // Update the value by user input
+        const dx = constrainRange(data.point.x / data.bounds.width + 0.05, 0, 1) * 10;
+        const dy = data.point.y / 10;
+        this.value.rawValue = Math.floor(dy) * 10 + dx;
+    }
+}
+
+// NOTE: JSDoc comments of `InputBindingPlugin` can be useful to know details about each property
+//
+// `InputBindingPlugin<In, Ex, P>` means...
+// - The plugin receives the bound value as `Ex`,
+// - converts `Ex` into `In` and holds it
+// - P is the type of the parsed parameters
+//
+const DotsInputPlugin = createPlugin({
+    id: 'input-template',
+    // type: The plugin type.
+    // - 'input': Input binding
+    // - 'monitor': Monitor binding
+    // - 'blade': Blade without binding
+    type: 'input',
+    accept(exValue, params) {
+        if (typeof exValue !== 'number') {
+            // Return null to deny the user input
+            return null;
+        }
+        // Parse parameters object
+        const result = parseRecord(params, (p) => ({
+            // `view` option may be useful to provide a custom control for primitive values
+            view: p.required.constant('dots'),
+            max: p.optional.number,
+            min: p.optional.number,
+            step: p.optional.number,
+        }));
+        if (!result) {
+            return null;
+        }
+        // Return a typed value and params to accept the user input
+        return {
+            initialValue: exValue,
+            params: result,
+        };
+    },
+    binding: {
+        reader(_args) {
+            return (exValue) => {
+                // Convert an external unknown value into the internal value
+                return typeof exValue === 'number' ? exValue : 0;
+            };
+        },
+        constraint(args) {
+            // Create a value constraint from the user input
+            const constraints = [];
+            // You can reuse existing functions of the default plugins
+            const cr = createRangeConstraint(args.params);
+            if (cr) {
+                constraints.push(cr);
+            }
+            const cs = createStepConstraint(args.params);
+            if (cs) {
+                constraints.push(cs);
+            }
+            // Use `CompositeConstraint` to combine multiple constraints
+            return new CompositeConstraint(constraints);
+        },
+        writer(_args) {
+            return (target, inValue) => {
+                // Use `target.write()` to write the primitive value to the target,
+                // or `target.writeProperty()` to write a property of the target
+                target.write(inValue);
+            };
+        },
+    },
+    controller(args) {
+        // Create a controller for the plugin
+        return new DotsController(args.document, {
+            value: args.value,
+            viewProps: args.viewProps,
+        });
+    },
+});
+
 class CubicBezierApi extends BladeApi {
     get label() {
         return this.controller.labelController.props.get('label');
@@ -8810,9 +8978,10 @@ const StepperInputPlugin = createPlugin({
 });
 
 const id = 'essentials';
-const css = '.tp-stepv,.tp-stepv_i,.tp-cbzgv,.tp-stepv_b,.tp-radv_b,.tp-rslv_k,.tp-cbzv_b{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-color:rgba(0,0,0,0);border-width:0;font-family:inherit;font-size:inherit;font-weight:inherit;margin:0;outline:none;padding:0}.tp-stepv_b,.tp-radv_b,.tp-rslv_k,.tp-cbzv_b{background-color:var(--btn-bg);border-radius:var(--bld-br);color:var(--btn-fg);cursor:pointer;display:block;font-weight:bold;height:var(--cnt-usz);line-height:var(--cnt-usz);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tp-stepv_b:hover,.tp-radv_b:hover,.tp-rslv_k:hover,.tp-cbzv_b:hover{background-color:var(--btn-bg-h)}.tp-stepv_b:focus,.tp-radv_b:focus,.tp-rslv_k:focus,.tp-cbzv_b:focus{background-color:var(--btn-bg-f)}.tp-stepv_b:active,.tp-radv_b:active,.tp-rslv_k:active,.tp-cbzv_b:active{background-color:var(--btn-bg-a)}.tp-stepv_b:disabled,.tp-radv_b:disabled,.tp-rslv_k:disabled,.tp-cbzv_b:disabled{opacity:.5}.tp-stepv,.tp-stepv_i,.tp-cbzgv{background-color:var(--in-bg);border-radius:var(--bld-br);box-sizing:border-box;color:var(--in-fg);font-family:inherit;height:var(--cnt-usz);line-height:var(--cnt-usz);min-width:0;width:100%}.tp-stepv:hover,.tp-stepv_i:hover,.tp-cbzgv:hover{background-color:var(--in-bg-h)}.tp-stepv:focus,.tp-stepv_i:focus,.tp-cbzgv:focus{background-color:var(--in-bg-f)}.tp-stepv:active,.tp-stepv_i:active,.tp-cbzgv:active{background-color:var(--in-bg-a)}.tp-stepv:disabled,.tp-stepv_i:disabled,.tp-cbzgv:disabled{opacity:.5}.tp-btngridv{border-radius:var(--bld-br);display:grid;overflow:hidden;gap:2px}.tp-btngridv.tp-v-disabled{opacity:.5}.tp-btngridv .tp-btnv_b:disabled{opacity:1}.tp-btngridv .tp-btnv_b:disabled .tp-btnv_t{opacity:.5}.tp-btngridv .tp-btnv_b{border-radius:0}.tp-cbzv{position:relative}.tp-cbzv_h{display:flex}.tp-cbzv_b{margin-right:4px;position:relative;width:var(--cnt-usz)}.tp-cbzv_b svg{display:block;height:16px;left:50%;margin-left:-8px;margin-top:-8px;position:absolute;top:50%;width:16px}.tp-cbzv_b svg path{stroke:var(--bs-bg);stroke-width:2}.tp-cbzv_t{flex:1}.tp-cbzv_p{height:0;margin-top:0;opacity:0;overflow:hidden;transition:height .2s ease-in-out,opacity .2s linear,margin .2s ease-in-out}.tp-cbzv.tp-cbzv-expanded .tp-cbzv_p{margin-top:var(--cnt-usp);opacity:1}.tp-cbzv.tp-cbzv-cpl .tp-cbzv_p{overflow:visible}.tp-cbzv .tp-popv{left:calc(-1*var(--cnt-hp));position:absolute;right:calc(-1*var(--cnt-hp));top:var(--cnt-usz)}.tp-cbzpv_t{margin-top:var(--cnt-usp)}.tp-cbzgv{height:auto;overflow:hidden;position:relative}.tp-cbzgv.tp-v-disabled{opacity:.5}.tp-cbzgv_p{left:16px;position:absolute;right:16px;top:0}.tp-cbzgv_g{cursor:pointer;display:block;height:calc(var(--cnt-usz)*5);width:100%}.tp-cbzgv_u{opacity:.1;stroke:var(--in-fg);stroke-dasharray:1}.tp-cbzgv_l{fill:rgba(0,0,0,0);stroke:var(--in-fg)}.tp-cbzgv_v{opacity:.5;stroke:var(--in-fg);stroke-dasharray:1}.tp-cbzgv_h{border:var(--in-fg) solid 1px;border-radius:50%;box-sizing:border-box;height:4px;margin-left:-2px;margin-top:-2px;pointer-events:none;position:absolute;width:4px}.tp-cbzgv:focus .tp-cbzgv_h-sel{background-color:var(--in-fg);border-width:0}.tp-cbzprvv{cursor:pointer;height:4px;padding:4px 0;position:relative}.tp-cbzprvv_g{display:block;height:100%;overflow:visible;width:100%}.tp-cbzprvv_t{opacity:.5;stroke:var(--mo-fg)}.tp-cbzprvv_m{background-color:var(--mo-fg);border-radius:50%;height:4px;margin-left:-2px;margin-top:-2px;opacity:0;position:absolute;top:50%;transition:opacity .2s ease-out;width:4px}.tp-cbzprvv_m.tp-cbzprvv_m-a{opacity:1}.tp-fpsv{position:relative}.tp-fpsv_l{bottom:4px;color:var(--mo-fg);line-height:1;right:4px;pointer-events:none;position:absolute}.tp-fpsv_u{margin-left:.2em;opacity:.7}.tp-rslv{cursor:pointer;padding-left:8px;padding-right:8px}.tp-rslv.tp-v-disabled{opacity:.5}.tp-rslv_t{height:calc(var(--cnt-usz));position:relative}.tp-rslv_t::before{background-color:var(--in-bg);border-radius:1px;content:"";height:2px;margin-top:-1px;position:absolute;top:50%;left:-4px;right:-4px}.tp-rslv_b{bottom:0;top:0;position:absolute}.tp-rslv_b::before{background-color:var(--in-fg);content:"";height:2px;margin-top:-1px;position:absolute;top:50%;left:0;right:0}.tp-rslv_k{height:calc(var(--cnt-usz) - 8px);margin-top:calc((var(--cnt-usz) - 8px)/-2);position:absolute;top:50%;width:8px}.tp-rslv_k.tp-rslv_k-min{margin-left:-8px}.tp-rslv_k.tp-rslv_k-max{margin-left:0}.tp-rslv.tp-rslv-zero .tp-rslv_k.tp-rslv_k-min{border-bottom-right-radius:0;border-top-right-radius:0}.tp-rslv.tp-rslv-zero .tp-rslv_k.tp-rslv_k-max{border-bottom-left-radius:0;border-top-left-radius:0}.tp-rsltxtv{display:flex}.tp-rsltxtv_s{flex:1}.tp-rsltxtv_t{flex:1;margin-left:4px}.tp-radv_l{display:block;position:relative}.tp-radv_i{left:0;opacity:0;position:absolute;top:0}.tp-radv_b{opacity:.5}.tp-radv_i:hover+.tp-radv_b{background-color:var(--btn-bg-h)}.tp-radv_i:focus+.tp-radv_b{background-color:var(--btn-bg-f)}.tp-radv_i:active+.tp-radv_b{background-color:var(--btn-bg-a)}.tp-radv_i:checked+.tp-radv_b{opacity:1}.tp-radv_t{bottom:0;color:inherit;left:0;overflow:hidden;position:absolute;right:0;text-align:center;text-overflow:ellipsis;top:0}.tp-radv_i:disabled+.tp-radv_b>.tp-radv_t{opacity:.5}.tp-radgridv{border-radius:var(--bld-br);display:grid;overflow:hidden;gap:2px}.tp-radgridv.tp-v-disabled{opacity:.5}.tp-radgridv .tp-radv_b{border-radius:0}.tp-stepv{display:flex;gap:var(--cnt-hp);background:none}.tp-stepv:hover,.tp-stepv:active{background:none}.tp-stepv.tp-v-disabled{opacity:.5}.tp-stepv_b{position:relative;width:var(--cnt-usz)}.tp-stepv_i{width:auto}';
+const css = '.tp-stepv,.tp-stepv_i,.tp-tmpv,.tp-cbzgv,.tp-stepv_b,.tp-radv_b,.tp-rslv_k,.tp-cbzv_b{-webkit-appearance:none;-moz-appearance:none;appearance:none;background-color:rgba(0,0,0,0);border-width:0;font-family:inherit;font-size:inherit;font-weight:inherit;margin:0;outline:none;padding:0}.tp-stepv_b,.tp-radv_b,.tp-rslv_k,.tp-cbzv_b{background-color:var(--btn-bg);border-radius:var(--bld-br);color:var(--btn-fg);cursor:pointer;display:block;font-weight:bold;height:var(--cnt-usz);line-height:var(--cnt-usz);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tp-stepv_b:hover,.tp-radv_b:hover,.tp-rslv_k:hover,.tp-cbzv_b:hover{background-color:var(--btn-bg-h)}.tp-stepv_b:focus,.tp-radv_b:focus,.tp-rslv_k:focus,.tp-cbzv_b:focus{background-color:var(--btn-bg-f)}.tp-stepv_b:active,.tp-radv_b:active,.tp-rslv_k:active,.tp-cbzv_b:active{background-color:var(--btn-bg-a)}.tp-stepv_b:disabled,.tp-radv_b:disabled,.tp-rslv_k:disabled,.tp-cbzv_b:disabled{opacity:.5}.tp-stepv,.tp-stepv_i,.tp-tmpv,.tp-cbzgv{background-color:var(--in-bg);border-radius:var(--bld-br);box-sizing:border-box;color:var(--in-fg);font-family:inherit;height:var(--cnt-usz);line-height:var(--cnt-usz);min-width:0;width:100%}.tp-stepv:hover,.tp-stepv_i:hover,.tp-tmpv:hover,.tp-cbzgv:hover{background-color:var(--in-bg-h)}.tp-stepv:focus,.tp-stepv_i:focus,.tp-tmpv:focus,.tp-cbzgv:focus{background-color:var(--in-bg-f)}.tp-stepv:active,.tp-stepv_i:active,.tp-tmpv:active,.tp-cbzgv:active{background-color:var(--in-bg-a)}.tp-stepv:disabled,.tp-stepv_i:disabled,.tp-tmpv:disabled,.tp-cbzgv:disabled{opacity:.5}.tp-btngridv{border-radius:var(--bld-br);display:grid;overflow:hidden;gap:2px}.tp-btngridv.tp-v-disabled{opacity:.5}.tp-btngridv .tp-btnv_b:disabled{opacity:1}.tp-btngridv .tp-btnv_b:disabled .tp-btnv_t{opacity:.5}.tp-btngridv .tp-btnv_b{border-radius:0}.tp-cbzv{position:relative}.tp-cbzv_h{display:flex}.tp-cbzv_b{margin-right:4px;position:relative;width:var(--cnt-usz)}.tp-cbzv_b svg{display:block;height:16px;left:50%;margin-left:-8px;margin-top:-8px;position:absolute;top:50%;width:16px}.tp-cbzv_b svg path{stroke:var(--bs-bg);stroke-width:2}.tp-cbzv_t{flex:1}.tp-cbzv_p{height:0;margin-top:0;opacity:0;overflow:hidden;transition:height .2s ease-in-out,opacity .2s linear,margin .2s ease-in-out}.tp-cbzv.tp-cbzv-expanded .tp-cbzv_p{margin-top:var(--cnt-usp);opacity:1}.tp-cbzv.tp-cbzv-cpl .tp-cbzv_p{overflow:visible}.tp-cbzv .tp-popv{left:calc(-1*var(--cnt-hp));position:absolute;right:calc(-1*var(--cnt-hp));top:var(--cnt-usz)}.tp-cbzpv_t{margin-top:var(--cnt-usp)}.tp-cbzgv{height:auto;overflow:hidden;position:relative}.tp-cbzgv.tp-v-disabled{opacity:.5}.tp-cbzgv_p{left:16px;position:absolute;right:16px;top:0}.tp-cbzgv_g{cursor:pointer;display:block;height:calc(var(--cnt-usz)*5);width:100%}.tp-cbzgv_u{opacity:.1;stroke:var(--in-fg);stroke-dasharray:1}.tp-cbzgv_l{fill:rgba(0,0,0,0);stroke:var(--in-fg)}.tp-cbzgv_v{opacity:.5;stroke:var(--in-fg);stroke-dasharray:1}.tp-cbzgv_h{border:var(--in-fg) solid 1px;border-radius:50%;box-sizing:border-box;height:4px;margin-left:-2px;margin-top:-2px;pointer-events:none;position:absolute;width:4px}.tp-cbzgv:focus .tp-cbzgv_h-sel{background-color:var(--in-fg);border-width:0}.tp-cbzprvv{cursor:pointer;height:4px;padding:4px 0;position:relative}.tp-cbzprvv_g{display:block;height:100%;overflow:visible;width:100%}.tp-cbzprvv_t{opacity:.5;stroke:var(--mo-fg)}.tp-cbzprvv_m{background-color:var(--mo-fg);border-radius:50%;height:4px;margin-left:-2px;margin-top:-2px;opacity:0;position:absolute;top:50%;transition:opacity .2s ease-out;width:4px}.tp-cbzprvv_m.tp-cbzprvv_m-a{opacity:1}.tp-tmpv{cursor:pointer;display:grid;grid-template-columns:repeat(10, 1fr);grid-template-rows:repeat(auto-fit, 10px);height:calc(var(--cnt-usz)*3);overflow:hidden;position:relative}.tp-tmpv.tp-v-disabled{opacity:.5}.tp-tmpv_text{color:var(--in-fg);bottom:2px;font-size:.9em;line-height:.9;opacity:.5;position:absolute;right:2px}.tp-tmpv_dot{height:10px;line-height:10px;position:relative;text-align:center}.tp-tmpv_dot::before{background-color:var(--in-fg);content:"";border-radius:1px;height:2px;left:50%;margin-left:-1px;margin-top:-1px;position:absolute;top:50%;width:2px}.tp-tmpv_frac{background-color:var(--in-fg);border-radius:1px;height:2px;left:50%;margin-top:-1px;position:absolute;top:50%}.tp-fpsv{position:relative}.tp-fpsv_l{bottom:4px;color:var(--mo-fg);line-height:1;right:4px;pointer-events:none;position:absolute}.tp-fpsv_u{margin-left:.2em;opacity:.7}.tp-rslv{cursor:pointer;padding-left:8px;padding-right:8px}.tp-rslv.tp-v-disabled{opacity:.5}.tp-rslv_t{height:calc(var(--cnt-usz));position:relative}.tp-rslv_t::before{background-color:var(--in-bg);border-radius:1px;content:"";height:2px;margin-top:-1px;position:absolute;top:50%;left:-4px;right:-4px}.tp-rslv_b{bottom:0;top:0;position:absolute}.tp-rslv_b::before{background-color:var(--in-fg);content:"";height:2px;margin-top:-1px;position:absolute;top:50%;left:0;right:0}.tp-rslv_k{height:calc(var(--cnt-usz) - 8px);margin-top:calc((var(--cnt-usz) - 8px)/-2);position:absolute;top:50%;width:8px}.tp-rslv_k.tp-rslv_k-min{margin-left:-8px}.tp-rslv_k.tp-rslv_k-max{margin-left:0}.tp-rslv.tp-rslv-zero .tp-rslv_k.tp-rslv_k-min{border-bottom-right-radius:0;border-top-right-radius:0}.tp-rslv.tp-rslv-zero .tp-rslv_k.tp-rslv_k-max{border-bottom-left-radius:0;border-top-left-radius:0}.tp-rsltxtv{display:flex}.tp-rsltxtv_s{flex:1}.tp-rsltxtv_t{flex:1;margin-left:4px}.tp-radv_l{display:block;position:relative}.tp-radv_i{left:0;opacity:0;position:absolute;top:0}.tp-radv_b{opacity:.5}.tp-radv_i:hover+.tp-radv_b{background-color:var(--btn-bg-h)}.tp-radv_i:focus+.tp-radv_b{background-color:var(--btn-bg-f)}.tp-radv_i:active+.tp-radv_b{background-color:var(--btn-bg-a)}.tp-radv_i:checked+.tp-radv_b{opacity:1}.tp-radv_t{bottom:0;color:inherit;left:0;overflow:hidden;position:absolute;right:0;text-align:center;text-overflow:ellipsis;top:0}.tp-radv_i:disabled+.tp-radv_b>.tp-radv_t{opacity:.5}.tp-radgridv{border-radius:var(--bld-br);display:grid;overflow:hidden;gap:2px}.tp-radgridv.tp-v-disabled{opacity:.5}.tp-radgridv .tp-radv_b{border-radius:0}.tp-stepv{display:flex;gap:var(--cnt-hp);background:none}.tp-stepv:hover,.tp-stepv:active{background:none}.tp-stepv.tp-v-disabled{opacity:.5}.tp-stepv_b{position:relative;width:var(--cnt-usz)}.tp-stepv_i{width:auto}';
 const plugins = [
     ButtonGridBladePlugin,
+    DotsInputPlugin,
     CubicBezierBladePlugin,
     FpsGraphBladePlugin,
     IntervalInputPlugin,
@@ -8823,4 +8992,4 @@ const plugins = [
     StepperInputPlugin,
 ];
 
-export { ButtonCellApi, ButtonGridApi, ButtonGridController, CubicBezier, CubicBezierApi, CubicBezierAssembly, CubicBezierController, CubicBezierGraphController, CubicBezierGraphView, CubicBezierPickerController, CubicBezierPickerView, CubicBezierPreviewView, CubicBezierView, FpsGraphBladeApi, FpsGraphController, FpsView, Fpswatch, Interval, IntervalAssembly, IntervalConstraint, RadioCellApi, RadioController, RadioGridApi, RadioGridController, RadioView, RangeSliderController, RangeSliderTextController, RangeSliderTextView, RangeSliderView, Stepper, StepperAssembly, StepperButtonsController, StepperButtonsView, StepperTextController, StepperTextView, TpRadioGridChangeEvent, css, id, plugins, stepperFromUnknown, writeStepper };
+export { ButtonCellApi, ButtonGridApi, ButtonGridController, CubicBezier, CubicBezierApi, CubicBezierAssembly, CubicBezierController, CubicBezierGraphController, CubicBezierGraphView, CubicBezierPickerController, CubicBezierPickerView, CubicBezierPreviewView, CubicBezierView, DotsController, DotsView, FpsGraphBladeApi, FpsGraphController, FpsView, Fpswatch, Interval, IntervalAssembly, IntervalConstraint, RadioCellApi, RadioController, RadioGridApi, RadioGridController, RadioView, RangeSliderController, RangeSliderTextController, RangeSliderTextView, RangeSliderView, Stepper, StepperAssembly, StepperButtonsController, StepperButtonsView, StepperTextController, StepperTextView, TpRadioGridChangeEvent, css, id, plugins, stepperFromUnknown, writeStepper };
