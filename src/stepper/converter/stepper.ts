@@ -5,10 +5,6 @@ import {Stepper} from '../model/stepper.js';
 export function stepperFromUnknown(exValue: unknown): Stepper {
 	// Convert an external unknown value into the internal value
 
-	console.log(Stepper.isObject(exValue)
-	? exValue.val
-	: 0);
-
 	return Stepper.isObject(exValue)
 		? new Stepper(exValue.val)
 		: new Stepper(0);

@@ -1,5 +1,4 @@
 import {
-	Constraint,
 	NumberTextProps,
 	Parser,
 	PointAxis,
@@ -7,15 +6,15 @@ import {
 	Value,
 	ValueController,
 	ViewProps,
-	parseNumber,
 } from '@tweakpane/core';
 
 import {Stepper, StepperAssembly} from '../model/stepper.js';
 import {StepperTextView} from '../view/stepper-text.js';
 import {StepperButtonsController} from './stepper-buttons.js';
+import {StepperConstraint} from '../constraint/stepper.js';
 
 interface Config {
-	constraint: Constraint<number> | undefined;
+	constraint: StepperConstraint;
 	parser: Parser<number>;
 	textProps: NumberTextProps;
 	value: Value<Stepper>;
@@ -35,7 +34,7 @@ export class StepperTextController implements ValueController<Stepper, StepperTe
 		this.sc_ = new StepperButtonsController(doc, config);
 
 		const axis = {
-			constraint: config.constraint,
+			constraint: config.constraint.edge,
 			textProps: config.textProps,
 		} as PointAxis;
 

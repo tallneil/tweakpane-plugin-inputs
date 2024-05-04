@@ -8814,11 +8814,7 @@ class StepperTextView {
 
 const className = ClassName('step');
 class StepperButtonsView {
-    // private readonly value_: Value<Stepper>;
     constructor(doc, config) {
-        // this.onButtonPropsChange_ = this.onButtonPropsChange_.bind(this);
-        // this.onValueChange_ = this.onValueChange_.bind(this);
-        // this.buttonProps_ = config.buttonProps;
         this.element = doc.createElement('div');
         this.element.classList.add(className());
         config.viewProps.bindClassModifiers(this.element);
@@ -8834,7 +8830,6 @@ class StepperButtonsView {
         config.viewProps.bindDisabled(btnPlus);
         this.element.appendChild(btnPlus);
         this.btnPlus = btnPlus;
-        //this.update_();
     }
 }
 
@@ -8842,6 +8837,7 @@ class StepperButtonsController {
     constructor(doc, config) {
         this.value = config.value;
         this.viewProps = config.viewProps;
+        config.constraint ? this.step = config.constraint.step : this.step = 1;
         this.view = new StepperButtonsView(doc, {
             value: this.value,
             viewProps: config.viewProps,
@@ -8849,9 +8845,7 @@ class StepperButtonsController {
         this.view.btnMinus.addEventListener('click', () => {
             var _a;
             const v = (_a = this.value.rawValue.val) !== null && _a !== void 0 ? _a : 0;
-            const step = 1; // fill this out 
-            const nv = v - step;
-            this.value.setRawValue(new Stepper(nv), {
+            this.value.setRawValue(new Stepper(v - this.step), {
                 forceEmit: true,
                 last: true,
             });
@@ -8859,9 +8853,7 @@ class StepperButtonsController {
         this.view.btnPlus.addEventListener('click', () => {
             var _a;
             const v = (_a = this.value.rawValue.val) !== null && _a !== void 0 ? _a : 0;
-            const step = 1; // fill this out 
-            const nv = v + step;
-            this.value.setRawValue(new Stepper(nv), {
+            this.value.setRawValue(new Stepper(v + this.step), {
                 forceEmit: true,
                 last: true,
             });
@@ -8875,7 +8867,7 @@ class StepperTextController {
         this.viewProps = config.viewProps;
         this.sc_ = new StepperButtonsController(doc, config);
         const axis = {
-            constraint: config.constraint,
+            constraint: config.constraint.edge,
             textProps: config.textProps,
         };
         this.tc_ = new PointNdTextController(doc, {
@@ -8898,9 +8890,6 @@ class StepperTextController {
 // reader
 function stepperFromUnknown(exValue) {
     // Convert an external unknown value into the internal value
-    console.log(Stepper.isObject(exValue)
-        ? exValue.val
-        : 0);
     return Stepper.isObject(exValue)
         ? new Stepper(exValue.val)
         : new Stepper(0);
@@ -8918,7 +8907,8 @@ function writeStepper(target, inValue) {
 }
 
 class StepperConstraint {
-    constructor(edge) {
+    constructor(step, edge) {
+        this.step = step;
         this.edge = edge;
     }
     constrain(value) {
@@ -8968,8 +8958,7 @@ const StepperInputPlugin = createPlugin({
             if (cs) {
                 constraints.push(cs);
             }
-            // Use `CompositeConstraint` to combine multiple constraints
-            return new StepperConstraint(new CompositeConstraint(constraints));
+            return new StepperConstraint(args.params.step ? args.params.step : 1, new CompositeConstraint(constraints));
         },
     },
     controller(args) {
@@ -8979,9 +8968,8 @@ const StepperInputPlugin = createPlugin({
             throw TpError.shouldNeverHappen();
         }
         const textProps = ValueMap.fromObject(createNumberTextPropsObject(args.params, v.rawValue.val));
-        console.log(c.edge);
         return new StepperTextController(args.document, {
-            constraint: c.edge,
+            constraint: c,
             parser: parseNumber,
             textProps: textProps,
             value: v,

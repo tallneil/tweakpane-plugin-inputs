@@ -44,7 +44,6 @@ export class DotsView implements View {
 
 	private refresh_(): void {
 		const rawValue = this.value_.rawValue;
-
 		this.textElem_.textContent = rawValue.toFixed(2);
 
 		while (this.dotElems_.length > 0) {

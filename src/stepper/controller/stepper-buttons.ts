@@ -1,4 +1,5 @@
 import {
+	Constraint,
 	Value,
 	ValueController,
 	ViewProps,
@@ -6,20 +7,24 @@ import {
 
 import {Stepper} from '../model/stepper.js';
 import {StepperButtonsView} from '../view/stepper-buttons.js';
+import {StepperConstraint} from '../constraint/stepper.js';
 
 interface Config {
 	value: Value<Stepper>;
 	viewProps: ViewProps;
+	constraint: StepperConstraint | undefined;
 }
 
 export class StepperButtonsController implements ValueController<Stepper, StepperButtonsView>{
 	public readonly value: Value<Stepper>;
 	public readonly view: StepperButtonsView;
 	public readonly viewProps: ViewProps;
+	public readonly step: number;
 
 	constructor(doc: Document, config: Config) {
 		this.value = config.value;
 		this.viewProps = config.viewProps;
+		config.constraint ? this.step = config.constraint.step : this.step = 1;
 		this.view = new StepperButtonsView(doc, {
 			value: this.value,
 			viewProps: config.viewProps,
@@ -27,9 +32,7 @@ export class StepperButtonsController implements ValueController<Stepper, Steppe
 		
 		this.view.btnMinus.addEventListener('click', () => {
 			const v = this.value.rawValue.val ?? 0;
-			const step = 1; // fill this out 
-			const nv = v - step;
-			this.value.setRawValue(new Stepper(nv), {
+			this.value.setRawValue(new Stepper(v - this.step), {
 				forceEmit: true,
 				last: true,
 			});
@@ -37,9 +40,7 @@ export class StepperButtonsController implements ValueController<Stepper, Steppe
 
 		this.view.btnPlus.addEventListener('click', () => {
 			const v = this.value.rawValue.val ?? 0;
-			const step = 1; // fill this out 
-			const nv = v + step;
-			this.value.setRawValue(new Stepper(nv), {
+			this.value.setRawValue(new Stepper(v + this.step), {
 				forceEmit: true,
 				last: true,
 			});

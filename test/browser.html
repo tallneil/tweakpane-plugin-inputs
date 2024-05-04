@@ -46,8 +46,6 @@
 				value: scales[y * 3 + x],
 			}),
 			label: 'radiogrid',
-		}).on('change', (ev) => {
-			console.log(ev);
 		});
 
 		pane.addBlade({
@@ -57,8 +55,6 @@
 			expanded: true,
 			label: 'cubic\nbezier',
 			picker: 'inline',
-		}).on('change', (ev) => {
-			console.log(ev);
 		});
 
 		pane.addBlade({
@@ -72,8 +68,6 @@
 				][y][x],
 			}),
 			label: 'button\ngrid',
-		}).on('click', (ev) => {
-			console.log(ev);
 		});
 
 		pane.addBinding(params, 'dots', {

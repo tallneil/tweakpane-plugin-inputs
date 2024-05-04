@@ -73,8 +73,10 @@ export const StepperInputPlugin: InputBindingPlugin<
 			if (cs) {
 				constraints.push(cs);
 			}
-			// Use `CompositeConstraint` to combine multiple constraints
-			return new StepperConstraint(new CompositeConstraint(constraints));
+			return new StepperConstraint(
+				args.params.step ? args.params.step : 1, 
+				new CompositeConstraint(constraints)
+			);
 		},
 	},
 	controller(args) {
@@ -88,10 +90,8 @@ export const StepperInputPlugin: InputBindingPlugin<
 			createNumberTextPropsObject(args.params, v.rawValue.val),
 		);
 
-		console.log(c.edge);
-
 		return new StepperTextController(args.document, {
-			constraint: c.edge,
+			constraint: c,
 			parser: parseNumber,
 			textProps: textProps,
 			value: v,
