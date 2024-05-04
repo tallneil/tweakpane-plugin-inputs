@@ -7,17 +7,12 @@ Made by [@tallneil](https://tallneil.io/). Thanks to [@cocopon](https://github.c
 ![Tweakpane UI screenshot](/assets/cover.png)
 
 ## Stepper input
-The stepper is an alternative to [range slider input](https://tweakpane.github.io/docs/input-bindings/#number_range). A stepper may be better-suited for small sets of discrete ranges, whereas a range slider is ideal for larger, continuous ranges.
-
-### Params
-`min`: Range minimum (optional)
-`max`: Range maximum (optional)
-`step`: Step value (default value: 1)
+This stepper input is an alternative to the Tweakpane default [range slider input](https://tweakpane.github.io/docs/input-bindings/#number_range). A stepper may be better-suited for small sets of discrete ranges, whereas a range slider is ideal for larger, continuous ranges.
 
 ### Features 
 * Use the `-` and `+` buttons to decrement or increment value by `step`
+* Optional `min`, `max`, and `step` params (`step` defaults to `1`)
 * Support for existing Tweakpane `number input` features, including `point and slide`. 
-
 
 
 ## Installation
@@ -47,7 +42,7 @@ pane.registerPlugin(TweakpanePluginInputs);
 ## Usage
 ```js
 const params = {
-  prop: 3,
+  prop: 2.5,
 };
 
 pane.addInput(params, 'prop', {
