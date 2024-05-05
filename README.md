@@ -9,6 +9,8 @@ Made by [@tallneil](https://tallneil.io/). Thanks to [@cocopon](https://github.c
 ## Stepper input
 This stepper input is an alternative to the Tweakpane default [range slider input](https://tweakpane.github.io/docs/input-bindings/#number_range). A stepper may be better-suited for small sets of discrete ranges, whereas a range slider is ideal for larger, continuous ranges.
 
+[Demo](https://tallneil.github.io/tweakpane-plugin-inputs/)
+
 ### Features 
 * Use the `-` and `+` buttons to decrement or increment value by `step`
 * Optional `min`, `max`, and `step` params (`step` defaults to `1`)
