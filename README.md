@@ -60,4 +60,8 @@ function updateValue(v) {
 ```
 
 ## Development notes
-`npm install` and `npm run start`
+```
+npm install
+npm run setup
+npm run start
+```
