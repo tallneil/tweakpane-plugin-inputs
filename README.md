@@ -23,7 +23,7 @@ This stepper input is an alternative to the Tweakpane default [range slider inpu
 ```html
 <script type="module">
   import {Pane} as Tweakpane from './tweakpane.min.js';
-  import * as TweakpanePluginInputs from './tweakpane-plugin-inputs.js';
+  import * as TweakpanePluginInputs from './tweakpane-plugin-inputs.min.js';
 
   const pane = new Pane();
   pane.registerPlugin(TweakpanePluginInputs);

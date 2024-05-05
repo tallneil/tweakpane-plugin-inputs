@@ -1,5 +1,5 @@
 import {Pane} from 'https://cdn.jsdelivr.net/npm/tweakpane@4.0.3/dist/tweakpane.min.js';
-import * as TweakpanePluginInputs from '../dist/tweakpane-plugin-inputs.js';
+import * as TweakpanePluginInputs from '../dist/tweakpane-plugin-inputs.min.js';
 
 const pane = new Pane({
     title: 'Tweakpane',
