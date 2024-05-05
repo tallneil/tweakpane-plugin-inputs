@@ -5,7 +5,7 @@
   "main": "dist/tweakpane-plugin-inputs.js",
   "type": "module",
   "types": "dist/types/index.d.ts",
-  "author": "cocopon",
+  "author": "tallneil",
   "license": "MIT",
   "files": [
     "dist"
