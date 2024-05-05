@@ -19,7 +19,7 @@ function makePane() {
         min: 0.5,
         max: 3,
         step: 0.5,
-    }).on('change', newValue => {updateStroke(newValue.value.val)});
+    }).on('change', newValue => {updateStroke(newValue.value)});
 }
 
 function updateStroke(v) {

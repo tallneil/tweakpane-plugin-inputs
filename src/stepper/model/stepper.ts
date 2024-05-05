@@ -33,7 +33,7 @@ export class Stepper {
 	}
 }
 
-export const StepperAssembly: PointNdAssembly<Stepper> = {
-	fromComponents: (comps) => new Stepper(comps[0]),
-	toComponents: (p) => [p.val],
+export const StepperAssembly: PointNdAssembly<number> = {
+	fromComponents: (comps) => comps[0],
+	toComponents: (p) => [p],
 };

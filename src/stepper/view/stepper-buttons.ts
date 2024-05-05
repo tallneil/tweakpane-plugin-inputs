@@ -8,7 +8,7 @@ import {
 import {Stepper} from '../model/stepper.js';
 
 interface Config {
-	value: Value<Stepper>;
+	value: Value<number>;
 	viewProps: ViewProps;
 }
 

@@ -48,11 +48,15 @@ const params = {
 };
 
 pane.addBinding(params, 'prop', {
-  view: 'stepper',
-  min: 0,
-  max: 5, 
-  step: 0.5
-});
+    view: 'stepper',
+    min: 0.5,
+    max: 3,
+    step: 0.5,
+}).on('change', newValue => {updateValue(newValue.value)});
+
+function updateValue(v) {
+  // do something with the new value
+}
 ```
 
 ## Development notes

@@ -4,7 +4,7 @@ import {StepperButtonsView} from './stepper-buttons.js';
 
 interface Config {
 	buttonsView: StepperButtonsView;
-	textView: PointNdTextController<Stepper>['view'];
+	textView: PointNdTextController<number>['view'];
 }
 
 const className = ClassName('step'); 

@@ -10,13 +10,13 @@ import {StepperButtonsView} from '../view/stepper-buttons.js';
 import {StepperConstraint} from '../constraint/stepper.js';
 
 interface Config {
-	value: Value<Stepper>;
+	value: Value<number>;
 	viewProps: ViewProps;
 	constraint: StepperConstraint | undefined;
 }
 
-export class StepperButtonsController implements ValueController<Stepper, StepperButtonsView>{
-	public readonly value: Value<Stepper>;
+export class StepperButtonsController implements ValueController<number, StepperButtonsView>{
+	public readonly value: Value<number>;
 	public readonly view: StepperButtonsView;
 	public readonly viewProps: ViewProps;
 	public readonly step: number;
@@ -31,16 +31,16 @@ export class StepperButtonsController implements ValueController<Stepper, Steppe
 		});
 		
 		this.view.btnMinus.addEventListener('click', () => {
-			const v = this.value.rawValue.val ?? 0;
-			this.value.setRawValue(new Stepper(v - this.step), {
+			const v = this.value.rawValue ?? 0;
+			this.value.setRawValue(v - this.step, {
 				forceEmit: true,
 				last: true,
 			});
 		});
 
 		this.view.btnPlus.addEventListener('click', () => {
-			const v = this.value.rawValue.val ?? 0;
-			this.value.setRawValue(new Stepper(v + this.step), {
+			const v = this.value.rawValue ?? 0;
+			this.value.setRawValue(v + this.step, {
 				forceEmit: true,
 				last: true,
 			});

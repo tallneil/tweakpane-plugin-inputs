@@ -1,5 +1,6 @@
 import {
 	BaseInputParams,
+	BindingTarget,
 	Constraint,
 	createNumberTextPropsObject,
 	createPlugin,
@@ -32,8 +33,8 @@ interface StepperInputParams extends NumberInputParams, BaseInputParams {
 // - converts `Ex` into `In` and holds it
 // - P is the type of the parsed parameters
 export const StepperInputPlugin: InputBindingPlugin<
-	Stepper,
-	StepperObject, 
+	number,
+	number, 
 	StepperInputParams
 > = createPlugin({
 	id: 'input-stepper',
@@ -54,14 +55,28 @@ export const StepperInputPlugin: InputBindingPlugin<
 
 		// Return a typed value and params to accept the user input
 		return result ? {
-			initialValue: new Stepper(exValue),
+			initialValue: exValue,
 			params: result,
 		} : null; 
 	},
 	binding: {
-		reader: (_args) => stepperFromUnknown,
+		reader(_args) {
+			return (exValue: unknown): number => {
+				// Convert an external unknown value into the internal value
+				return typeof exValue === 'number' ? exValue : 0;
+			};
+		},
+		//reader: (_args) => stepperFromUnknown,
 
-		writer: (_args) => writeStepper,
+		writer(_args) {
+			return (target: BindingTarget, inValue: number) => {
+				// Use `target.write()` to write the primitive value to the target,
+				// or `target.writeProperty()` to write a property of the target
+				target.write(inValue);
+			};
+		},
+
+		//writer: (_args) => writeStepper,
 
 		constraint(args) {
 			const constraints = [];
@@ -87,7 +102,7 @@ export const StepperInputPlugin: InputBindingPlugin<
 		}
 
 		const textProps = ValueMap.fromObject(
-			createNumberTextPropsObject(args.params, v.rawValue.val),
+			createNumberTextPropsObject(args.params, v.rawValue),
 		);
 
 		return new StepperTextController(args.document, {

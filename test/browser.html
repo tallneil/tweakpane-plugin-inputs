@@ -86,10 +86,23 @@
 			min: -5,
 			max: 5,
 			step: 0.5,
-		}); 
+		}).on('change', newValue => {updateStepperVal(newValue.value)});
 
 		window.pane = pane;
+
+		function updateStepperVal(v) {
+			console.log(v);
+		}
 
 	</script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+

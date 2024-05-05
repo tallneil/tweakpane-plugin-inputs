@@ -48,7 +48,6 @@ export const DotsInputPlugin: InputBindingPlugin<
 		const result = parseRecord<DotsInputParams>(params, (p) => ({
 			// `view` option may be useful to provide a custom control for primitive values
 			view: p.required.constant('dots'),
-
 			max: p.optional.number,
 			min: p.optional.number,
 			step: p.optional.number,

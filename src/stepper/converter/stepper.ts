@@ -2,12 +2,14 @@ import {BindingTarget} from '@tweakpane/core';
 import {Stepper} from '../model/stepper.js';
 
 // reader
-export function stepperFromUnknown(exValue: unknown): Stepper {
+export function stepperFromUnknown(exValue: number): number {
 	// Convert an external unknown value into the internal value
 
-	return Stepper.isObject(exValue)
-		? new Stepper(exValue.val)
-		: new Stepper(0);
+	return typeof exValue === 'number' ? exValue : 0;
+
+	// return Stepper.isObject(exValue)
+	// 	? new Stepper(exValue.val)
+	// 	: new Stepper(0);
 
 	// return (exValue: unknown): number => {
 	// 	// Convert an external unknown value into the internal value

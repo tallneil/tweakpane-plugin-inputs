@@ -1,7 +1,7 @@
 import {Constraint} from '@tweakpane/core';
 import {Stepper} from '../model/stepper.js';
 
-export class StepperConstraint implements Constraint<Stepper> {
+export class StepperConstraint implements Constraint<number> {
 	public readonly step: number;
 	public readonly edge: Constraint<number> | undefined;
 
@@ -10,9 +10,7 @@ export class StepperConstraint implements Constraint<Stepper> {
 		this.edge = edge;
 	}
 
-	constrain(value: Stepper): Stepper {
-        return new Stepper(
-            this.edge?.constrain(value.val) ?? value.val,
-        );
+	constrain(value: number): number {
+        return this.edge?.constrain(value) ?? value;
 	}
 }

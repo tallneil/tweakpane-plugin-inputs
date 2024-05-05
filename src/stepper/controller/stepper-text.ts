@@ -2,6 +2,7 @@ import {
 	NumberTextProps,
 	Parser,
 	PointAxis,
+	PointNdAssembly,
 	PointNdTextController,
 	Value,
 	ValueController,
@@ -17,16 +18,16 @@ interface Config {
 	constraint: StepperConstraint;
 	parser: Parser<number>;
 	textProps: NumberTextProps;
-	value: Value<Stepper>;
+	value: Value<number>;
 	viewProps: ViewProps;
 }
 
-export class StepperTextController implements ValueController<Stepper, StepperTextView> {
-	public readonly value: Value<Stepper>;
+export class StepperTextController implements ValueController<number, StepperTextView> {
+	public readonly value: Value<number>;
 	public readonly view: StepperTextView;
 	public readonly viewProps: ViewProps;
 	private readonly sc_: StepperButtonsController;
-	private readonly tc_: PointNdTextController<Stepper>;
+	private readonly tc_: PointNdTextController<number>;
 
 	constructor(doc: Document, config: Config) {
 		this.value = config.value;
@@ -38,7 +39,7 @@ export class StepperTextController implements ValueController<Stepper, StepperTe
 			textProps: config.textProps,
 		} as PointAxis;
 
-		this.tc_ = new PointNdTextController(doc, {
+		this.tc_ = new PointNdTextController<number>(doc, {
 			assembly: StepperAssembly,
 			axes: [axis], 
 			parser: config.parser, 
@@ -52,7 +53,7 @@ export class StepperTextController implements ValueController<Stepper, StepperTe
 		});
 	}
 
-	public get textController(): PointNdTextController<Stepper> {
+	public get textController(): PointNdTextController<number> {
 		return this.tc_;
 	}
 }
