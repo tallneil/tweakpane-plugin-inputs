@@ -54,3 +54,6 @@ pane.addBinding(params, 'prop', {
   step: 0.5
 });
 ```
+
+## Development notes
+`npm install` and `npm run start`
