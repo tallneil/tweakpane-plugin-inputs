@@ -45,7 +45,7 @@ const params = {
   prop: 2.5,
 };
 
-pane.addInput(params, 'prop', {
+pane.addBinding(params, 'prop', {
   view: 'stepper',
   min: 0,
   max: 5, 
