@@ -1,5 +1,4 @@
 import {ClassName, PointNdTextController, View} from '@tweakpane/core';
-import {Stepper} from '../model/stepper.js';
 import {StepperButtonsView} from './stepper-buttons.js';
 
 interface Config {

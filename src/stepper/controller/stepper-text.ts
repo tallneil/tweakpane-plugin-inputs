@@ -2,7 +2,6 @@ import {
 	NumberTextProps,
 	Parser,
 	PointAxis,
-	PointNdAssembly,
 	PointNdTextController,
 	Value,
 	ValueController,

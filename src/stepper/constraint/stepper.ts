@@ -1,5 +1,4 @@
 import {Constraint} from '@tweakpane/core';
-import {Stepper} from '../model/stepper.js';
 
 export class StepperConstraint implements Constraint<number> {
 	public readonly step: number;

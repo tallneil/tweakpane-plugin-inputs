@@ -1,11 +1,9 @@
 import {
-	Constraint,
 	Value,
 	ValueController,
 	ViewProps,
 } from '@tweakpane/core';
 
-import {Stepper} from '../model/stepper.js';
 import {StepperButtonsView} from '../view/stepper-buttons.js';
 import {StepperConstraint} from '../constraint/stepper.js';
 

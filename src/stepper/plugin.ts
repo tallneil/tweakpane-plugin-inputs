@@ -1,7 +1,6 @@
 import {
 	BaseInputParams,
 	BindingTarget,
-	Constraint,
 	createNumberTextPropsObject,
 	createPlugin,
 	createRangeConstraint,
@@ -16,8 +15,6 @@ import {
 } from '@tweakpane/core';
 
 import {StepperTextController} from './controller/stepper-text.js';
-import {stepperFromUnknown, writeStepper} from './converter/stepper.js';
-import {Stepper, StepperAssembly, StepperObject} from './model/stepper.js';
 import {StepperConstraint} from './constraint/stepper.js';
 
 interface StepperInputParams extends NumberInputParams, BaseInputParams {
@@ -60,13 +57,15 @@ export const StepperInputPlugin: InputBindingPlugin<
 		} : null; 
 	},
 	binding: {
+		//reader: (_args) => stepperFromUnknown,
+		//writer: (_args) => writeStepper,
+		
 		reader(_args) {
 			return (exValue: unknown): number => {
 				// Convert an external unknown value into the internal value
 				return typeof exValue === 'number' ? exValue : 0;
 			};
 		},
-		//reader: (_args) => stepperFromUnknown,
 
 		writer(_args) {
 			return (target: BindingTarget, inValue: number) => {
@@ -75,8 +74,6 @@ export const StepperInputPlugin: InputBindingPlugin<
 				target.write(inValue);
 			};
 		},
-
-		//writer: (_args) => writeStepper,
 
 		constraint(args) {
 			const constraints = [];

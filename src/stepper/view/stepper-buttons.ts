@@ -5,8 +5,6 @@ import {
 	ViewProps,
 } from '@tweakpane/core';
 
-import {Stepper} from '../model/stepper.js';
-
 interface Config {
 	value: Value<number>;
 	viewProps: ViewProps;
