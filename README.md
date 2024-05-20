@@ -19,7 +19,7 @@ This stepper input is an alternative to the Tweakpane default [number input](htt
 ### Optional bounds
 The range (slider) input requires both `min` and `max` values, but the stepper input requires neither. This makes the stepper useful for properties that have a mandatory lower bound, but no mandatory upper bound, or vice versa. 
 
-For instance, consider the many CSS properties such as `border-radius` that require non-negative values. This tells us to set `min` to `0`, but what about `max`? If I want to use a range input, I'd have to give `max` an arbitrary value, but a stepper input with no `max` would well here. 
+For instance, consider the many CSS properties such as `border-radius` that require non-negative values. This tells us to set `min` to `0`, but what about `max`? If I want to use a range input, I'd have to give `max` some arbitrarily large value, but a stepper input with no `max` would well here. 
 
 Because the upper bound is optional, a stepper input is also well-suited for properties like `count` or `quantity`. 
 
