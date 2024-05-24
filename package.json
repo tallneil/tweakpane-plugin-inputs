@@ -1,6 +1,6 @@
 {
   "name": "tweakpane-plugin-inputs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Input plugins for Tweakpane",
   "main": "dist/tweakpane-plugin-inputs.js",
   "type": "module",
