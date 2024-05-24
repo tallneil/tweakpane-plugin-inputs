@@ -30,7 +30,6 @@ Because the upper bound is optional, a stepper input is also well-suited for pro
 ```html
 <script type="module">
   import {Pane} from 'https://cdn.jsdelivr.net/npm/tweakpane/dist/tweakpane.min.js';
-
   import * as TweakpanePluginInputs from 'https://cdn.jsdelivr.net/npm/tweakpane-plugin-inputs/dist/tweakpane-plugin-inputs.min.js';
 </script>
 ```
@@ -51,7 +50,6 @@ import * as TweakpanePluginInputs from 'tweakpane-plugin-inputs';
 ```js
 // import Tweakpane and this plugin using CDN links
 import {Pane} from 'https://cdn.jsdelivr.net/npm/tweakpane/dist/tweakpane.min.js';
-
 import * as TweakpanePluginInputs from 'https://cdn.jsdelivr.net/npm/tweakpane-plugin-inputs/dist/tweakpane-plugin-inputs.min.js';
 
 // make a new pane
