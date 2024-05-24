@@ -4,7 +4,7 @@ Additional inputs for [Tweakpane](https://tweakpane.github.io/docs/) GUI, includ
 ### Author
 Made by [@tallneil](https://tallneil.io/). Thanks to [@cocopon](https://github.com/cocopon), the creator of Tweakpane.
 
-![Tweakpane UI screenshot](/assets/cover.png)
+![Tweakpane UI screenshot](https://raw.githubusercontent.com/tallneil/tweakpane-plugin-inputs/main/assets/cover.png)
 
 ## Stepper input
 This stepper input is an alternative to the Tweakpane default [number input](https://tweakpane.github.io/docs/input-bindings/#number) and [number range input](https://tweakpane.github.io/docs/input-bindings/#number_range). 
