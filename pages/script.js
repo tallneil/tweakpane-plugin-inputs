@@ -1,5 +1,6 @@
-import {Pane} from 'https://cdn.jsdelivr.net/npm/tweakpane@4.0.3/dist/tweakpane.min.js';
-import * as TweakpanePluginInputs from '../dist/tweakpane-plugin-inputs.min.js';
+import {Pane} from 'https://cdn.jsdelivr.net/npm/tweakpane/dist/tweakpane.min.js';
+import * as TweakpanePluginInputs from 'https://cdn.jsdelivr.net/npm/tweakpane-plugin-inputs/dist/tweakpane-plugin-inputs.min.js';
+//import * as TweakpanePluginInputs from '../dist/tweakpane-plugin-inputs.min.js';
 
 const pane = new Pane({
     title: 'Tweakpane',
