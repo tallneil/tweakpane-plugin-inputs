@@ -10,6 +10,16 @@
   "files": [
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tallneil/tweakpane-plugin-inputs.git"
+  },
+  "keywords": [
+    "tweakpane",
+    "tweakpane-plugin",
+    "gui",
+    "dat-gui"
+  ],
   "scripts": {
     "prepare": "run-s clean build",
     "prepublishOnly": "npm test",

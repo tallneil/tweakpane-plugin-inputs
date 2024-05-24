@@ -9,7 +9,8 @@ Made by [@tallneil](https://tallneil.io/). Thanks to [@cocopon](https://github.c
 ## Stepper input
 This stepper input is an alternative to the Tweakpane default [number input](https://tweakpane.github.io/docs/input-bindings/#number) and [number range input](https://tweakpane.github.io/docs/input-bindings/#number_range). 
 
-[Demo](https://tallneil.github.io/tweakpane-plugin-inputs/)
+### Demo
+[Try it →](https://tallneil.github.io/tweakpane-plugin-inputs/)
 
 ### Features 
 * Use the `-` and `+` buttons to decrement or increment value by `step`
@@ -25,34 +26,44 @@ Because the upper bound is optional, a stepper input is also well-suited for pro
 
 ## Installation
 
-### Browser
+### [CDN](https://www.jsdelivr.com/package/npm/tweakpane-plugin-inputs)
 ```html
 <script type="module">
-  import {Pane} as Tweakpane from './tweakpane.min.js';
-  import * as TweakpanePluginInputs from './tweakpane-plugin-inputs.min.js';
+  import {Pane} from 'https://cdn.jsdelivr.net/npm/tweakpane/dist/tweakpane.min.js';
 
-  const pane = new Pane();
-  pane.registerPlugin(TweakpanePluginInputs);
+  import * as TweakpanePluginInputs from 'https://cdn.jsdelivr.net/npm/tweakpane-plugin-inputs/dist/tweakpane-plugin-inputs.min.js';
 </script>
 ```
 
+### [NPM](https://www.npmjs.com/package/tweakpane-plugin-inputs)
+```bash
+npm i tweakpane
+npm i tweakpane-plugin-inputs
+```
 
-### Package
 ```js
 import {Pane} from 'tweakpane';
 import * as TweakpanePluginInputs from 'tweakpane-plugin-inputs';
-
-const pane = new Pane();
-pane.registerPlugin(TweakpanePluginInputs);
 ```
 
 
-## Usage
+## Example (JS)
 ```js
+// import Tweakpane and this plugin using CDN links
+import {Pane} from 'https://cdn.jsdelivr.net/npm/tweakpane/dist/tweakpane.min.js';
+
+import * as TweakpanePluginInputs from 'https://cdn.jsdelivr.net/npm/tweakpane-plugin-inputs/dist/tweakpane-plugin-inputs.min.js';
+
+// make a new pane
+const pane = new Pane();
+pane.registerPlugin(TweakpanePluginInputs);
+
+// set params you want to tweak
 const params = {
   prop: 2.5,
 };
 
+// make a stepper input and bind it to a param
 pane.addBinding(params, 'prop', {
     view: 'stepper',
     min: 0.5,
@@ -63,11 +74,4 @@ pane.addBinding(params, 'prop', {
 function updateValue(v) {
   // do something with the new value
 }
-```
-
-## Development notes
-```
-npm install
-npm run setup
-npm run start
 ```
