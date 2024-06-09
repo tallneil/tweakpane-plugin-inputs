@@ -12,7 +12,7 @@ import {
 } from './radio-grid/input-plugin.js';
 import {StepperInputPlugin} from './stepper/plugin.js';
 
-export const id = 'essentials';
+export const id = 'inputs';
 export const css = '__css__';
 export const plugins: TpPlugin[] = [
 	ButtonGridBladePlugin,

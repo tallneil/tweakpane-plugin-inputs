@@ -1,5 +1,5 @@
 import { TpPlugin } from '@tweakpane/core';
-export declare const id = "essentials";
+export declare const id = "inputs";
 export declare const css = "__css__";
 export declare const plugins: TpPlugin[];
 export * from './button-grid/api/button-cell.js';
