@@ -4,7 +4,7 @@ Helpful inputs for [Tweakpane](https://tweakpane.github.io/docs/) GUI. Made by [
 ![Tweakpane UI screenshot](https://raw.githubusercontent.com/tallneil/tweakpane-plugin-inputs/main/assets/cover.png)
 
 ## Stepper input • [Demo →](https://codepen.io/tallneil/pen/xxNLPeW)
-![Tweakpane UI screenshot](/assets/stepper.png)
+![Tweakpane UI screenshot](https://raw.githubusercontent.com/tallneil/tweakpane-plugin-inputs/main/assets/stepper.png)
 The stepper input in this package is an alternative to the Tweakpane default [number input](https://tweakpane.github.io/docs/input-bindings/#number) and [number range input](https://tweakpane.github.io/docs/input-bindings/#number_range). 
 
 ### Features 
@@ -21,7 +21,7 @@ The range input requires both `min` and `max` values, but the stepper input requ
 Consider the many CSS properties such as `border-radius` and `stroke-width` that require non-negative values. This tells us to set `min` to `0`, but what about `max`? If I want to use a range input, I'd have to give `max` some arbitrary value, or instead I could use a stepper input with no `max`.
 
 ## Toggle input
-![Tweakpane UI screenshot](/assets/toggle.png)
+![Tweakpane UI screenshot](https://raw.githubusercontent.com/tallneil/tweakpane-plugin-inputs/main/assets/toggle.png)
 Coming soon!
 
 ## Installation
