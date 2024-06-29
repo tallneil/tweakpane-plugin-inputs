@@ -11,11 +11,15 @@
 </head>
 <body>
 	<script type="module">
-		import {Pane} from '../node_modules/tweakpane/dist/tweakpane.min.js';
-		import * as TweakpanePluginInputs from '../dist/tweakpane-plugin-inputs.min.js';
+		// tweakpane (main)
+		// import {Pane} from '../node_modules/tweakpane/dist/tweakpane.min.js';
+		import {Pane} from 'https://cdn.jsdelivr.net/npm/tweakpane/dist/tweakpane.min.js';
 
-		// CDN links:
-		// import {Pane} from 'https://cdn.jsdelivr.net/npm/tweakpane/dist/tweakpane.min.js';
+		// tweakpane plugin essentials 
+		import * as TweakpanePluginEssentials from 'https://cdn.jsdelivr.net/npm/@tweakpane/plugin-essentials/dist/tweakpane-plugin-essentials.min.js'
+
+		// my plugin
+		import * as TweakpanePluginInputs from '../dist/tweakpane-plugin-inputs.min.js';
   		// import * as TweakpanePluginInputs from 'https://cdn.jsdelivr.net/npm/tweakpane-plugin-inputs/dist/tweakpane-plugin-inputs.min.js';
 
 		const params = {
@@ -28,6 +32,7 @@
 		};
 
 		const pane = new Pane();
+		pane.registerPlugin(TweakpanePluginEssentials); 
 		pane.registerPlugin(TweakpanePluginInputs); 
 
 		pane.addBinding(params, 'rangeStepInput', {
