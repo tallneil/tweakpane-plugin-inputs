@@ -1,12 +1,10 @@
 # Inputs for Tweakpane
-Helpful inputs for [Tweakpane](https://tweakpane.github.io/docs/) GUI, including a numerical stepper input. More inputs coming soon!
-
-### Author
-Made by [@tallneil](https://tallneil.io/). Thanks to [@cocopon](https://github.com/cocopon), the creator of Tweakpane.
+Helpful inputs for [Tweakpane](https://tweakpane.github.io/docs/) GUI. Made by [@tallneil](https://tallneil.io/), with thanks to [@cocopon](https://github.com/cocopon), the creator of Tweakpane.
 
 ![Tweakpane UI screenshot](https://raw.githubusercontent.com/tallneil/tweakpane-plugin-inputs/main/assets/cover.png)
 
 ## Stepper input • [Demo →](https://codepen.io/tallneil/pen/xxNLPeW)
+![Tweakpane UI screenshot](/assets/stepper.png)
 The stepper input in this package is an alternative to the Tweakpane default [number input](https://tweakpane.github.io/docs/input-bindings/#number) and [number range input](https://tweakpane.github.io/docs/input-bindings/#number_range). 
 
 ### Features 
@@ -21,6 +19,10 @@ The Tweakpane range (slider) input has a great interface, but it isn't ideal for
 The range input requires both `min` and `max` values, but the stepper input requires neither. This makes the stepper useful for properties that have no bounds, only one bound, or both loewr and upper bounds.
 
 Consider the many CSS properties such as `border-radius` and `stroke-width` that require non-negative values. This tells us to set `min` to `0`, but what about `max`? If I want to use a range input, I'd have to give `max` some arbitrary value, or instead I could use a stepper input with no `max`.
+
+## Toggle input
+![Tweakpane UI screenshot](/assets/toggle.png)
+Coming soon!
 
 ## Installation
 
